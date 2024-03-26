@@ -1,1 +1,61 @@
-\chapter{lambda expression}
+\chapter{Lambda expression}
+
+\input{lambda_expression/intro/intro}
+
+E' un blocco di codice che può essere passato, assegnato, restituito in modo da essere eseguito in un secondo momento, una o più volte.
+
+I valori gestiti sono funzioni e non oggetti, in java una funzione èun'istanza di un oggetto che implementa una certa interfaccia.
+
+Nell'esempio di LengthComparator, a noi basterebbe dire che, per confrontare due stringhe, bisogna usare il blocco di codice di compare, specificando che first e 
+second sono oggetti di tipo String.
+
+Quindi dovremmo passare ad Arrays.sort una funzione che, dato due oggetti String, restiruisce first.length() $-$ second.length().
+
+In java, la sintassi per definire questa funzione è
+
+\begin{lstlisting}
+(String first, String second) -> first.length() - second.length()
+\end{lstlisting}
+
+che risulta essere la nostra lambda expression.
+
+Quindi, nel metodo di Arrays.sort, invece di passare un'istaza di una classe che implementa Comparator o una classe anonima, gli passiamo la lambda.
+\begin{lstlisting}[escapechar=!]
+public class SortDemo {
+    public static void main(String[] args) {
+        String[] friends = new String[] { "Peter", "Paul", "Mary" };
+        Arrays.sort(friends, !\colorbox{light_yellow}{new Comparator<String>()}! { 
+            !\colorbox{light_yellow}{public int compare(String first, String second)}! {
+                !\colorbox{light_yellow}{return first.length() - second.length()}!;
+            }
+        });
+        // [Paul, Mary, Peter]
+        System.out.println(Arrays.toString(friends));
+    }
+}
+... 
+public class SortDemo {
+    public static void main(String[] args) {
+        String[] friends = new String[] { "Peter", "Paul", "Mary" };
+        Arrays.sort(friends, !\colorbox{light_yellow}{(String first, String second) -> first.length() - second.length())}!;
+        // [Paul, Mary, Peter]
+        System.out.println(Arrays.toString(friends));
+    }
+} 
+\end{lstlisting}
+
+Il body di una lambda viene eseguito non quando viene passata al metodo sort ma quando bisogna effetivamente confrontare gli oggetto (stessa cosa per i parametri 
+della lambda), si dice \textit{esecuzione differita} e se avesse bisogno di più righe allora si usa le parentesi graffe e il return.
+
+Java può inferire il tipo dei parametri della lambda dal contesto, in tal caso si possono omettere i tipi, stessa cosa per il tipo di ritorno anche se qui java fa un 
+controllo che sia utilizzabile nel contesto in cui viene usata la lambda.
+
+Si può assegnare/passare una lambda quando ci si aspetta un oggetto di tipo interfaccia che
+\begin{itemize}
+    \item ha un singolo metodo astratto;
+    \item purché la lambda sia compatibile con tale metodo , considerando il tipo dei parametri della lambda che devono essere compatibili coi parametri del metodo 
+    e del tipo inferito del body della lambda che deve essere compatibile col tipo di ritorno del metodo.
+\end{itemize}
+
+Una tale interfaccia è detta \textit{interfaccia funzionale} o \textit{SAM} (Single Abstract Method).
+
