@@ -1,0 +1,4 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\contentsline {chapter}{\numberline {1}Lambda expression}{2}{chapter.1}%
+\contentsline {chapter}{\numberline {2}stream}{5}{chapter.2}%
