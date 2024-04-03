@@ -16,7 +16,7 @@ Il contratto è che x.compareTo(y) deve restituire:
     \item 0 altrimenti.
 \end{itemize}
 
-Ad esempio, la classe String, implementa di suo questa interfaccia e implementa compareTo con il confronto lessicografico.
+\textbf{N.B.}La classe String implementa di suo questa interfaccia e implementa compareTo con il confronto lessicografico.
 
 Questo spezzone di codice funziona in quanto \textit{Arrays.sort} riesce a ordinare oggetti la cui classe implementa Comparable e, come detto prima, String la 
 implementa.
@@ -42,8 +42,8 @@ dove, in questo caso, il compareTo di Employee delega il confronto al compareTo 
 Se volessimo ordinare Employee/String con un altro criterio, non potremmo farlo in quanto non sarebbe possibile definire due metodi compareTo e non sarebbe possibile
 modificare la classe java.
 
-Esiste una variante di Arrays.sort che oltre ad accettare una lista da ordinare, accetta un'altra interfaccia, \newline Comparator$<$T$>$, avente un metodo compare(T o1, T o2) 
-che restituisce un intero.
+Esiste una variante di Arrays.sort che oltre ad accettare una lista da ordinare, accetta un'altra interfaccia, \newline Comparator$<$T$>$, avente un metodo 
+compare(T o1, T o2) che restituisce un intero.
 
 Quindi per definire un nuovo criterio, dovremo definire una nuova classe, che implementa Comparator, e passarla al metodo Arrays.sort.
 \begin{lstlisting}
