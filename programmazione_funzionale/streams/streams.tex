@@ -1,1 +1,70 @@
 \chapter{stream}
+
+Una “vista” dei dati per specificare computazioni a un più alto livello concettuale rispetto alle collezioni e gli iteratori.
+
+Supponiamo di voler calcolare la media dei salari di una collezione di oggetti Employee.
+\begin{multicols}{2}
+    Se decidessimo di usare gli iteratori
+    \begin{itemize}
+        \item dovremmo dichiarare una variabile per accumulare i risultati intermedi;
+        \item iterare sulla sorgente dati, dove, ad ogni iterazione, aggiorniamo i risultati intermedi;
+        \item alla fine, calcolare la media.
+    \end{itemize}
+    \columnbreak
+    Se usassimo gli stream, basterebbe
+    \begin{itemize}
+        \item specificare la sorgente dati;
+        \item la proprietà di interesse;
+        \item cosa vogliamo fare con quella proprietà.
+    \end{itemize}
+    La libreria stream farà tutto il resto ottimizzando il calcolo.
+\end{multicols}
+
+Rispettano il principio "“what, not how", ovvero si specifica cosa si vuole fare e non il come deve essere fatto. 
+
+Stream e collezioni, superficialmente, sembrano simili, entrambi permettono di trasformare e recuperare dati ma 
+\begin{itemize}
+    \item uno stream non \textit{memorizza} i dati, sono memorizzati nella collezione originale o generati su richiesta;
+    \item uno stream non \textit{modifica} i dati originali, ma genera un nuovo stream dove alcuni elementi dello stream precendete non sono presenti nello stream 
+    corrente;
+    \item le operazioni sono "\textit{lazy}" quanto il più possibile, ovvero non vengono eseguite finché non serve il risultato (si possono avere anche 
+    stream infiniti).
+\end{itemize}
+
+Gli stream si basano sul \textit{method chaining}, ovvero chiamano un metodo sul risultato di un altro metodo, senza memorizzare i risultati intermedi.
+
+Il workflow tipico di uno stream consiste nel creare una “pipeline” di operazioni in 3 fasi:
+\begin{itemize}
+    \item creazione dello stream;
+    \item specifica delle operazioni intermedie;
+    \item applicazione di un’operazione finale di riduzione per produrre un risultato oppure un'operazione di raccolta.
+\end{itemize}
+
+\section{Creazione di uno stream}
+
+Gli stream si creano da collezioni e array o usando generatori o iteratori.
+
+Per le collezioni abbiamo i metodi stream() e parallelStream(), per gli array o un numero arbitrario di argomenti (vararg) abbiamo il metodo statico\newline 
+Stream.of() e poi abbiamo i metodi Stream.generate(Supplier $<$T$>$) e Stream.iterate(T seed, UnaryOperator$<$T$>$ f).
+
+Gli ultimi due metodi possono genera stream infiniti.
+
+\subsection{Stream infiniti}
+Stream.generate(Supplier $<$T$>$) prende una lambda senza argomenti e viene chiamato solo quando viene richiesto allo stream il prossimo elemento
+\begin{lstlisting}
+Stream<String> echos = Stream.generate(() -> "Echo");
+Stream<Double> randoms = Stream.generate(Math::random); 
+\end{lstlisting}
+
+Stream.iterate(T seed, UnaryOperator$<$T$>$ f) dove seed è il "seme" iniziale mentre f è una funzione che sarà applicata al valore precendete
+\begin{lstlisting}
+Stream<BigInteger> integers = Stream.iterate(BigInteger.ZERO, n -> n.add(BigInteger.ONE))   
+\end{lstlisting}
+
+\section{Operazioni intermedie}
+
+
+
+
+
+
