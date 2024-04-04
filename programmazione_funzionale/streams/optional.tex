@@ -1,0 +1,24 @@
+\subsection{Optional}
+Un oggetto Optional$<$T$>$ è un wrapper di un oggetto T oppure nessun oggetto.
+
+L'idea di base sull’utilizzo di un oggetto Optional è quella di usare i suoi metodi che permettono di produrre un’alternativa se il valore non è presente o consumarlo.
+
+Questo oggetto deve essere usato in modo appropriato, altrimenti si hanno gli stessi problemi che si hanno con null, ad esempio
+\begin{lstlisting}
+Optional<T> optionalValue = ...;
+optionalValue.get().someMethod();
+
+T value = ...;
+value.someMethod();
+\end{lstlisting}
+
+Questi due blocchi sono uguali, se optionalValue non contenesse alcun valore, allora avremo una NPE, stessa cosa per quest'altro esempio
+\begin{lstlisting}
+if (optionalValue.isPresent())
+    optionalValue.get().someMethod();
+
+if (value != null)
+    value.someMethod();
+\end{lstlisting}
+
+

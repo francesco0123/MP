@@ -63,8 +63,46 @@ Stream<BigInteger> integers = Stream.iterate(BigInteger.ZERO, n -> n.add(BigInte
 
 \section{Operazioni intermedie}
 
+Le operazioni intermedie di uno stream sono metodi che trasformano lo stream in un altro stream.
 
+Tra questi metodi troviamo filter() che si occupa di filtrare uno stream, map() che si occupa di trasformare gli elementi di uno stream, limit() che limita ad un
+certo numero di elemnti dello stream (occhio a dove lo mettiamo), skip() che salta determinati elementi dello stream, distinct() che scarta i rislutati, etc\dots
 
+Con gli stream si scrivere meno codice, è più leggibile ma allo stesso tempo è molto facile commettere errori, i due prossimi stream forniscono un risultato differente
 
+\begin{lstlisting}
+#SI LIMITA ALLE PRIME 5 STRINGHE CHE RISPETTANO IL FILTRO
+long count = words.stream()
+                    .filter(w -> w.length() > 12)
+                    .limit(5)
+                    .count();
+#SI LIMITA ALLE PRIME 5 STRINGHE                    
+long count = words.stream()
+                    .limit(5)
+                    .filter(w -> w.length() > 12)
+                    .count();
+\end{lstlisting}
+
+\section{Operazione di riduzione di uno stream}
+
+Una volta applicate tutte le operazioni di trasformazione, alla fine si deve applicare un’operazione di riduzione.
+
+Alcuni metodi di riduzione sono min() e max() che restituiscono, rispettivamente, il minimo ed il massimo di uno stream in base ad un criterio.
+
+Questa forzerà l’esecuzione di tutte le operazioni lazy precedenti e dopo questa ultima operazione lo stream non potrà più essere usato.
+
+Alcuni di queste operazioni restituiscono un oggetto di classe Optional, un’alternativa più sicura della gestione dei valori null come ad esempio findFirst(), 
+ifPresent(), etc\dots
+
+\input{streams/optional}
+
+\section{Operazione di raccolta di uno stream}
+
+Un'alternativa alla riduzione di uno stream è la raccolta.
+
+Ci sono molti metodi tra cui il metodo collect() che prende in input oggetti che implementano l'interfaccia Collector, tra cui Collectors che fornisce metodi 
+per creare istanze delle collezioni più comuni.
+
+Abbiamo anche toMap(), groupingBy() o partitionBy().
 
 
