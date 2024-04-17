@@ -1,4 +1,4 @@
-\chapter{stream}
+\chapter{Stream}
 
 Una “vista” dei dati per specificare computazioni a un più alto livello concettuale rispetto alle collezioni e gli iteratori.
 
@@ -44,8 +44,8 @@ Il workflow tipico di uno stream consiste nel creare una “pipeline” di opera
 
 Gli stream si creano da collezioni e array o usando generatori o iteratori.
 
-Per le collezioni abbiamo i metodi stream() e parallelStream(), per gli array o un numero arbitrario di argomenti (vararg) abbiamo il metodo statico\newline 
-Stream.of() e poi abbiamo i metodi Stream.generate(Supplier $<$T$>$) e Stream.iterate(T seed, UnaryOperator$<$T$>$ f).
+Per le collezioni abbiamo i metodi stream() e parallelStream(), per gli array o un numero arbitrario di argomenti (vararg) abbiamo il metodo statico Stream.of() 
+e poi abbiamo i metodi Stream.generate(Supplier $<$T$>$) e\newline Stream.iterate(T seed, UnaryOperator$<$T$>$ f).
 
 Gli ultimi due metodi possono genera stream infiniti.
 
@@ -66,9 +66,10 @@ Stream<BigInteger> integers = Stream.iterate(BigInteger.ZERO, n -> n.add(BigInte
 Le operazioni intermedie di uno stream sono metodi che trasformano lo stream in un altro stream.
 
 Tra questi metodi troviamo filter() che si occupa di filtrare uno stream, map() che si occupa di trasformare gli elementi di uno stream, limit() che limita ad un
-certo numero di elemnti dello stream (occhio a dove lo mettiamo), skip() che salta determinati elementi dello stream, distinct() che scarta i rislutati, etc\dots
+certo numero di elementi dello stream (occhio a dove lo mettiamo), skip() che salta determinati elementi dello stream, distinct() che scarta i duplicati, etc\dots
 
-Con gli stream si scrivere meno codice, è più leggibile ma allo stesso tempo è molto facile commettere errori, i due prossimi stream forniscono un risultato differente
+Con gli stream si scrivere meno codice, lo si rende più leggibile ma allo stesso tempo è molto facile commettere errori, i due prossimi stream forniscono un risultato 
+differente
 
 \begin{lstlisting}
 #SI LIMITA ALLE PRIME 5 STRINGHE CHE RISPETTANO IL FILTRO
@@ -87,11 +88,16 @@ long count = words.stream()
 
 Una volta applicate tutte le operazioni di trasformazione, alla fine si deve applicare un’operazione di riduzione.
 
-Alcuni metodi di riduzione sono min() e max() che restituiscono, rispettivamente, il minimo ed il massimo di uno stream in base ad un criterio.
+Alcuni metodi di riduzione sono min() e max() che restituiscono, rispettivamente, il minimo ed il massimo di uno stream in base ad un criterio oppure il metodo reduce(\dots)
+che prende una funziona binaria e continua ad applicarla partendo dai primi due elementi.
+\begin{lstlisting}
+List<Integer> values = ...;
+Optional<Integer> sum = values.stream().reduce((x, y) -> x + y);
+\end{lstlisting}
 
-Questa forzerà l’esecuzione di tutte le operazioni lazy precedenti e dopo questa ultima operazione lo stream non potrà più essere usato.
+Le operazioni di raccolta/riduzione forzeranno l’esecuzione di tutte le operazioni, lazy, precedenti e dopo lo stream non potrà più essere usato.
 
-Alcuni di queste operazioni restituiscono un oggetto di classe Optional, un’alternativa più sicura della gestione dei valori null come ad esempio findFirst(), 
+Alcuni di queste operazioni, come reduce(\dots), restituiscono un oggetto di classe Optional, un’alternativa più sicura della gestione dei valori null come ad esempio findFirst(), 
 ifPresent(), etc\dots
 
 \input{streams/optional}
@@ -101,8 +107,24 @@ ifPresent(), etc\dots
 Un'alternativa alla riduzione di uno stream è la raccolta.
 
 Ci sono molti metodi tra cui il metodo collect() che prende in input oggetti che implementano l'interfaccia Collector, tra cui Collectors che fornisce metodi 
-per creare istanze delle collezioni più comuni.
+per creare istanze delle collezioni più comuni come ad esempio toList() o toSet(), iterator() che ritorna un iteratore o anche toArray().
 
-Abbiamo anche toMap(), groupingBy() o partitionBy().
+Spesso si vuole una mappa che associa ad una chiave, una collezione di oggetti e qui entrano in gioco i metodi di raggruppamento o partizionamento.
 
+Si usa il primo sepcificando la lambda che calcola la chiave, detta \textit{calssifier function} mentre si usa il secondo quando quest'ultima è booleana
+\begin{lstlisting}
+#per ogni stringa del nome abbiamo la lista delle relative persone
+Map<String, List<Person>> sameName = people.collect(Collectors.groupingBy(Person::getName));
 
+#abbiamo due liste, una che contiene il nome e una che non lo contiene
+Map<Boolean, List<Person>> emptyNames = people.collect(Collectors.partitioningBy(p -> p.getName().isEmpty()));
+\end{lstlisting}
+
+Di default groupingBy raggruppa in una List ma ci sono altre versioni che permettono di specificare un downstream collector
+\begin{lstlisting}
+#visto prima
+Map<String, List<Person>> sameName = people.collect(Collectors.groupingBy(Person::getName));
+
+#nuovo tipo
+Map<String, Long> sameName = people.collect(Collectors.groupingBy(Person::getName, Collectors.counting()));
+\end{lstlisting}
