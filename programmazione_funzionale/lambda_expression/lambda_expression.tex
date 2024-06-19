@@ -46,8 +46,8 @@ public class SortDemo {
 } 
 \end{lstlisting}
 
-Il body di una lambda viene eseguito non quando viene passata al metodo sort ma quando bisogna effetivamente confrontare gli oggetto (stessa cosa per i parametri 
-della lambda), si dice \textit{esecuzione differita} e se avesse bisogno di più righe allora si usa le parentesi graffe e il return.
+Il body di una lambda viene eseguito non quando viene passata al metodo sort ma quando bisogna effetivamente confrontare gli oggetto (\textit{esecuzione differita}) e se il body 
+dovesse aver bisogno di più righe, allora si userebbero le parentesi graffe e il return.
 
 Java può inferire il tipo dei parametri della lambda dal contesto, in tal caso si possono omettere i tipi, stessa cosa per il tipo di ritorno anche se qui java fa un 
 controllo che sia utilizzabile nel contesto in cui viene usata la lambda.
