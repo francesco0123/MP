@@ -1,0 +1,92 @@
+Per comprendere ed usare le lambda, bisogna partire dalle \textit{interfacce}.
+
+Un'interfaccia è un meccanismo per definire un \textit{contratto} tra due parti, il fornitore del servizio (l'interfaccia stessa) e le classi che vogliono 
+che i loro oggetti siano utilizzabili con quel servizio.
+
+Prendiamo ad esempio l'interfaccia Comparable$<$T$>$, avente un metodo, compareTo(T o), che restiruisce un intero e assicura di confrontare solo oggetti dello 
+stesso tipo.
+
+Se una classe decidesse di implementare questa interfaccia, quindi fornire un'implementazione del metodo, allora i suoi oggetti potrebbero essere ordinati da 
+java.
+
+Il contratto è che x.compareTo(y) deve restituire:
+\begin{itemize}
+    \item un intero positivo se x viene dopo di y;
+    \item un intero negativo nel caso contrario;
+    \item 0 altrimenti.
+\end{itemize}
+
+\textbf{N.B.}La classe String implementa di suo questa interfaccia e implementa compareTo con il confronto lessicografico.
+
+Questo spezzone di codice funziona in quanto \textit{Arrays.sort} riesce a ordinare oggetti la cui classe implementa Comparable e, come detto prima, String la 
+implementa.
+\begin{lstlisting}
+String[] friends = { "Peter", "Paul", "Mary" };
+Arrays.sort(friends); // friends is now ["Mary", "Paul", "Peter"]
+System.out.println(Arrays.toString(friends));
+\end{lstlisting}
+
+Così come potremmo ordinare oggetti \textit{Employee} in base al loro nome
+\begin{lstlisting}
+public class Employee implements Comparable<Employee> {
+    private String name;
+
+    @Override
+    public int compareTo(Employee other) {
+        return name.compareTo(other.getName());
+    }
+}
+\end{lstlisting}
+dove, in questo caso, il compareTo di Employee delega il confronto al compareTo di String.
+
+Se volessimo ordinare Employee/String con un altro criterio, non potremmo farlo in quanto non sarebbe possibile definire due metodi compareTo e non sarebbe possibile
+modificare la classe java.
+
+Esiste una variante di Arrays.sort che oltre ad accettare una lista da ordinare, accetta un'altra interfaccia, \newline Comparator$<$T$>$, avente un metodo 
+compare(T o1, T o2) che restituisce un intero.
+
+Quindi per definire un nuovo criterio, dovremo definire una nuova classe, che implementa Comparator, e passarla al metodo Arrays.sort.
+\begin{lstlisting}
+public class SortDemo {
+    public static void main(String[] args) {
+        String[] friends = new String[] { "Peter", "Paul", "Mary" };
+        Arrays.sort(friends, new LengthComparator());
+        // [Paul, Mary, Peter]
+        System.out.println(Arrays.toString(friends));
+    }
+}
+...
+class LengthComparator implements Comparator<String> {
+    public int compare(String first, String second) {
+        return first.length() - second.length();
+    }
+}
+\end{lstlisting}
+
+Se il metodo di confronto ci servisse solo in quel punto di SortDemo, saremmo comunque costretti a definire una classe e istanziarla.
+
+Per questo motivo ci sono le \textit{classi anonime}, un meccanismo che riduce la verbosità del codice
+\begin{itemize}
+    \item che permette di dichiarare e istanziare una classe allo stesso tempo;
+    \item sono simile alle classi locali, solo che non hanno un nome;
+    \item la loro invocazione avviene come quella di un costruttore, solo che al suo interno c'è una classe vera e propria.
+\end{itemize}
+
+\begin{lstlisting}
+public class SortDemo {
+    public static void main(String[] args) {
+        String[] friends = new String[] { "Peter", "Paul", "Mary" };
+        Arrays.sort(friends, new Comparator<String>() {
+            public int compare(String first, String second) {
+                return first.length() - second.length();
+            }
+        });
+        // [Paul, Mary, Peter]
+        System.out.println(Arrays.toString(friends));
+    }
+}
+\end{lstlisting}
+
+Quindi, fino ad ora, abbiamo visto due interfacce, avente un singolo metodo, il contratto che stiamo usando dipende dal quel singolo metodo
+e se non ci fosse bisogno di mantenersi uno stato per implementare quel metodo, allora sarebbe più comodo poter specificare solo quel 
+singolo blocco di codice invece di creare una classe che implementa l’interfaccia e istanziarla o creare una classe anonima.

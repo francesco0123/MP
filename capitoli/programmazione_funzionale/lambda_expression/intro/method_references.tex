@@ -1,0 +1,27 @@
+Il codice che si scrive in una lambda expression richiama semplicemente un metodo che è già implementato, in questi casi, invece di passare/assegnare una lambda che 
+chiama semplicemente quel metodo passandogli i parametri della lambda, si passa/assegna un riferimento a quel metodo (\textit{method reference}), attraverso la 
+notazione '::'.
+
+Abbiamo tre tipi di method reference
+\begin{itemize}
+    \item Class::instanceMethod dove il primo parametro diventa il ricevente del metodo, gli altri sono passati al metodo
+    \begin{lstlisting}
+    Arrays.sort(strings, (x, y) -> x.compareToIgnoreCase(y));
+
+    Arrays.sort(strings, String::compareToIgnoreCase);
+    \end{lstlisting}
+    \item Class::staticMethod dove tutti parametri sono passati al metodo statico
+    \begin{lstlisting}
+    list.removeIf(x -> Objects.isNull(x));
+    
+    list.removeIf(Objects::isNull);
+    \end{lstlisting}
+    \item Class:instanceMethod dove il metodo viene richiamato sull’object specificato prima dei :: mentre gli altri parametri sono passati al metodo
+    \begin{lstlisting}
+    strings.forEach(x -> System.out.println(x));
+
+    strings.forEach(System.out::println);
+    \end{lstlisting}
+\end{itemize}
+
+Con i method reference si usa uno stile più dichiarativo, si scrive meno codice e lo si legge meglio.
