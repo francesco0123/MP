@@ -1,0 +1,77 @@
+\chapter{INFORMATION HIDING}
+
+Utilizzo di meccanismi per evitare che tutti possano accedere a certe parti di codice.\\
+Noi abbiamo visto i livelli di accessibilità in Java
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\linewidth]{../../immagini/information_hiding/accessibilità}
+\end{figure}
+
+Per convenzione
+
+\begin{itemize}
+  \item le variabili d'instanza dovrebbero essere private (evita anche protected);
+  \item i campi static, per rappresentare costanti accessibili a tutti, dovrebbero essere public final;
+  \item i metodi che utilizzano dettagli interni dovrebbero essere private;
+  \item i metodi che potrebbero servire alle sottoclassi, dovrebbero essere protected;
+  \item i metodi che saranno usati dalle altre classi, dovranno essere public.
+\end{itemize}
+
+Creare un oggetto che ha parametri d'instanza, privati, che però vi si possonono accedere, con un get, o settare, tramite un setter, è la cosa sbagliata.\\
+Supponiamo di avere una classe Person tale che
+
+\begin{lstlisting}
+  public class Person {
+    private String name;
+    
+    public Person(String name) {
+      this.name = name;
+    }
+    
+    @Override
+    public String toString() {
+      return "Person [name=" + name + "]";
+    }
+}
+\end{lstlisting}
+
+Se instaziassi la classe e cercassi di accedere al campo name, il compilatore mi segnalerebbe errore.\\
+L'information hiding è pensato per essere usato a tempo di compilazione e non a run time.\\
+Java permette di accedere alle variabili, anche private, di una classe.\\
+infatti
+
+\begin{lstlisting}
+  @Test public void testReadPrivateMember() throws ... {
+    Person person = new Person("John");
+    // riferimento al campo (anche se privato)
+    Field nameField = person.getClass().getDeclaredField("name");
+    // aggira il controllo di accesso
+    nameField.setAccessible(true);
+    // legge il valore del campo
+    Object nameValue = nameField.get(person);
+    assertEquals("John", nameValue);
+  }
+\end{lstlisting}
+
+\textbf{N.B.} Il metodo setAccessible(boolean bol) permette, effettivamente di accedere ai campi private, altrimenti non sarebbe possibile farlo.\\
+Se io dichiarassi name public, legittimerei il suo uso da parte dei cliente, imponendomi il vincoli non poter mai più modificare quella variabile, altrimenti i client verranno rotti (non compileranno più).\\
+Ogni client che userà quel membro sarà strettamente accoppiato (tightly coupled) a quel membro (noi questo non lo vogliamo).\\
+Stessa cosa per protected, solo che qui saranno le sottoclassi ad essere tightly coupled.\\
+Dichiarando un membro private, lo nascondo al "mondo", non legittimiamo il suo uso da parte dei client.\\
+Il compilatore controllerà il corretto uso nei vari client e
+
+\begin{itemize}
+  \item se compileranno con errori di accesso, significa che i client non sono legittimati all’uso;
+  \item se accederanno al membro via reflection (run time) e qualcosa non dovesse funziona, sarà colpa loro. 
+\end{itemize} 
+
+Più dettagli interni nascondiamo, più avremo disaccoppiamento e più sarà facile testare singole componenti in isolamento.\\
+Se diachiarassimo qualcosa come public/protected, come le API, e volessimo effettuare dei cambiamento, dovremmo notificare i client quando rilasceremo il nuovo aggiornamento, specificando se si tratta di qualcosa che rompe API, implementa qualcosa di nuovo oppure la risoluzione di bug.\\
+Un modo per indicare questi cambiamenti è l'utilizzo della semantic versioning, un numero composta da tre parti, $X.Y.Z$, dove se
+
+\begin{itemize}
+  \item dovesse cambiare X, significherebbe aver introdotto qualcosa che rome l'API;
+  \item dovesse cambiare Y, significherebbe aver introdotto qualcosa di nuovo;
+  \item dovesse cambiare Z, significherebbe aver risolto dei bug (sperando di non aver introdotto nuovi bug).
+\end{itemize}
