@@ -1,0 +1,200 @@
+\chapter{COVARIANZA E CONTROVARIANZA}
+
+Dalla matematica, una funzione \textit{f}, tale che f$:D\rightarrow C$, può essere sosituita da una funzione \textit{g}, tale che g$:D^\prime\rightarrow C^\prime$, sse $C^\prime<:C$ 
+(\textbf{covariante} sul tipo di \textbf{ritorno}) e $D<:D^\prime$ (\textbf{controvariante} su tipo del \textbf{parametro}), ovvero una funzione g, che deve 
+sostituire f, può essere più specifica sul tipo di ritorno e più generale sul parametro in input.
+
+Supponiamo di avere due classi, Employee e Manager, tale che Manager$<:$Employee.
+
+Employee ha un metodo setSalary() e Manager ha il metodo setBonus(int).
+
+Prendiamo altre due classi, EmployyeDB e ManagerDB, tale che ManagerDB$<:$EmployyeDB.
+
+La prima ha al suo interno un metodo find(int) che restiusce un Employee, mentre il secondo ridefinisce il metodo facendo tornare un Manager.
+\begin{multicols}{2}
+    \begin{lstlisting}
+    public class EmployeeDatabase {
+        public Employee findEmployee(int id) {
+            ...
+        }
+    }    
+    \end{lstlisting}       
+\columnbreak
+    \begin{lstlisting}
+    public class ManagerDatabase extends EmployeeDatabase {
+        @Override
+        public Manager findEmployee(int id) {
+            ...
+        }
+    }
+    \end{lstlisting}
+\end{multicols}
+
+Se eseguissi questo codice, tutto funzionerebba.
+
+\begin{lstlisting}
+    EmployeeDB d = new ManagerDB();
+    Employee e = d.find(1);
+\end{lstlisting}
+
+Per il binding dinamico, d staticamente è EmployeeDB ma a runtime è ManagerDB, inoltre il metodo find resituisce un Manager e non abbiamo problemi anche perchè è un 
+sottotipo di Employee.
+
+Questo è consistente col tipo di ritorno che è covariante e che può essere uguale o più specializzato.
+
+Ipotizziamo che il concetto di covarianza valga anche per i parametri e quindi supponiamo che EmployeeDB abbia un metodo updateEmployee(Employee), che setta il salario di un Employee, e che la classe sottotipo, ridefinisca il metodo cambiandone il parametro in un Manager,  e aggiungendo al suo interno il metodo setBonus(int) (può farlo in quanto è di Manager).
+
+\begin{multicols}{2}
+    \begin{lstlisting}
+        public class EmployeeDB {
+        ...
+            public void updateEmployee(Employee e) {
+                e.setSalary(...);
+            }
+        }
+    \end{lstlisting}    
+    \columnbreak
+    \begin{lstlisting}
+        public class ManagerDB extends EmployeeDB {
+        ...
+            @Override
+            public void updateEmployee(Manager e) {
+                super.updateEmployee(e);
+                e.setBonus(0);
+            }
+        }
+    \end{lstlisting}
+\end{multicols}
+
+Eseguendo questo codice
+
+\begin{lstlisting}
+    EmployeeDatabase d = new ManagerDatabase();
+    d.updateEmployee(new Employee());
+\end{lstlisting}
+
+Come detto prima, per il binding dinamico, d staticamente è EmployeeDB ma a runtime è ManagerDB, quindi il metodo che sarà chiamato, sarà quello di ManagerDB che 
+però non esiste e quindi lancerà un'eccezione del tipo NoSuchMethodException.
+
+A livello di compilazione, tutto è ok perchè il metodo updateEmployee(Employee), staticamente è di tipo EmployeeDB ma a runtime chiamerà il metodo di ManagerDB 
+dove abbiamo deciso di mettere in posizione covariante anche i parametri e questo non va bene perchè, per il binding dinamico, verrebbe chiamato updateEmployee
+di ManagerDatabase che peraltro si aspettava un Manager ed invece si ritrova un Employee e boom, eccezione del tipo NoSuchMethodException.
+
+Java adotta un sistema di tipi \textbf{sound}, ovvero un programma, accettato staticamente dal compilatore, non generarà mai errori NoSuchMethodException a runtime.
+
+Nello specifico i tipi statici, controllati durante la compilazione, durante l’esecuzione si mantengono come tali oppure diventano sottotipi.
+
+Java non permette la controvarianza durante la ridefinizione di un metodo in quanto richiede che i tipi dei parametri non cambino affatto 
+(si dice che java è invariante sul tipo dei parametri).
+
+Supponiamo che Employee abbia un supertipo, Person e che EmployeeDB sia esteso da un'altra classe, PersonDB che esegue override del metodo chiamando dentro il suo 
+metodo setName().
+
+\begin{lstlisting}
+public class EmployeeDatabase {
+    ...
+    public void updateEmployee(Employee e) {
+        e.setSalary(...);
+    }
+}
+
+public class PersonDataBase extends EmployeeDatabase {
+    @Override
+    public void updateEmployee(Person e) {
+        super.updateEmployee(e);
+        e.setName("");
+    }
+}
+\end{lstlisting}
+
+Dal punto di vista della controvarianza, ciò è corretto, però avremo un errore, in quanto non potremmo usare il metodo super perchè richiede Employee, mentre gli stiamo 
+passando un Person e un Person NON è un Employee.
+
+Quindi possiamo dire che Java, per la ridefinizione di metodi, adotta l'approcio sicuro, ovvero covariante sul tipo di ritorno e invariante sui parametri.
+
+Magari una soluzione potrebbe essere quella di preferire l'overloading all'override, magari abbiamo lo stesso metodo, uno che prende in input Employee e l'altro che prende
+Person.
+
+\begin{lstlisting}
+public class EmployeeDatabase {
+    ...
+    public void updateEmployee(Employee e) {
+        e.setSalary(...);
+    }
+}
+
+public class ManagerDatabase extends EmployeeDatabase {
+    ...
+    public void updateEmployee(Manager e) {
+        super.updateEmployee(e);
+        e.setBonus(0);
+    }
+}
+\end{lstlisting}
+
+Anche qui ci saranno problemi, infatti dato il seguente spezzone di codice
+
+\begin{lstlisting}
+EmployeeDatabase d1 = new ManagerDatabase();
+ManagerDatabase d2 = new ManagerDatabase();
+
+// chiama EmployeeDatabase.updateEmployee(Employee)
+d1.updateEmployee(new Employee());
+
+// chiama ManagerDatabase.updateEmployee(Manager)
+d2.updateEmployee(new Manager());
+
+/*  chiama ANCORA EmployeeDatabase.updateEmployee(Employee) perche' d1 e' staticamente EmployeeDatabase
+ *   ManagerDatabase.updateEmployee(Manager) aggiunge un metodo in overloading ma NON ridefinisce 
+ *   EmployeeDatabase.updateEmployee(Employee) quindi non si applica il binding dinamico!
+*/
+d1.updateEmployee(new Manager());
+\end{lstlisting}
+
+Quindi potremmo risolvere passando dall'usare l'overloading in una gerarchia di classi, all'usare l'overloading in una singola classe.
+
+\begin{lstlisting}
+public class EmployeeDatabase {
+    ...
+    public void updateEmployee(Employee e) {
+        e.setSalary(0);
+    }
+
+    public void updateEmployee(Manager e) {
+        e.setBonus(0);
+    }
+}
+\end{lstlisting}
+
+però anche nel prossimo spezzone, avremo un comportamento non prevedibile
+\begin{lstlisting}
+EmployeeDatabase d1 = new ManagerDatabase();
+
+// chiama updateEmployee(Employee): l'argomento e' un Employee
+d1.updateEmployee(new Employee());
+
+// chiama updateEmployee(Manager): l'argomento e' un Manager
+d1.updateEmployee(new Manager());
+
+Employee e1 = new Employee();
+Employee e2 = new Manager();
+
+// chiama updateEmployee(Employee)
+d1.updateEmployee(e1);
+
+// chiama sempre updateEmployee(Employee)
+d1.updateEmployee(e2);
+\end{lstlisting}
+
+perchè in java, l'overloading è un meccanismo statico.
+
+Implementare una sorta di overloading dinamico è difficile dal punto di vista dell'efficienza (diverso dalla complessità costante del binding dinamico).
+
+Quindi java, per la ridefinizione dei metodi, adotta l’approccio sicuro, covariante sul tipo di ritorno e invariante sui tipi dei parametri.
+
+Per le lambda invece si, possiamo essere controvarianti sui parametri, esempio il metodo map degli stream che è definito come 
+\begin{lstlisting}
+<R> Stream<R> map(Function<? super T, ? extends R> mapper)    
+\end{lstlisting}
+
+ovvero, una lambda di tipo Function$<$T, R$>$ può accettare anche una lambda di (sotto)tipo Function$<$T’, R’$>$ dove T $<:$ T’ e R’ $<:$ R
