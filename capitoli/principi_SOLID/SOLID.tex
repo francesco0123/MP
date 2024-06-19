@@ -125,7 +125,7 @@ Quindi sarebbe meglio proibire l'estensione della classe (con un final), proibir
 Allora, dal concetto di classi concrete ed ereditarietà, arriviamo al concetto di classi astratte o interfacce ed, eventualmente, al principio di composizione e delega.
 
 \begin{wrapfigure}{r}{3cm}
-  \includegraphics[width=0.5\linewidth]{../immagini/principio_SOLID/esempioOCP}  
+  \includegraphics[width=0.5\linewidth]{../../immagini/principio_SOLID/esempioOCP}  
 \end{wrapfigure}
 
 Prediamo come esempio la classe astratta Policy che ha un metodo, public e probabilmente final, PolicyFunction che, a sua volta, implementa una certa politica in termini di un metodo, protetto e 
@@ -374,9 +374,9 @@ Quindi si nota che l'interfaccia Parcheggio si occupa di due logiche distinte, q
 Una possibile soluzione, quindi, sarebbe quella di scindere l'interfaccia parcheggio in altre due interfacce, quella a pagamento e quella gratis, la prima oltre ad ereditare i metodi rifeirti al parcheggio, aggiungerà i metodi riguardanti i pagamenti, mentre la seconda, implementrà l'interfaccia padre.\\
 Con questo nuovo modello, possiamo anche andare oltre e dividere l'interfaccia pagamento per supportare diverse modalità di pagamento.\\
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
-  \includegraphics[width=0.5\linewidth]{../immagini/principio_SOLID/refactoring_interfaccia}
+  \includegraphics[width=0.5\linewidth]{../../immagini/principio_SOLID/refactoring_interfaccia.png}
 \end{figure}
 
 \section{Dependency Inversion Principle (DIP)}
@@ -392,7 +392,7 @@ Mentre per codice di basso livello intendiamo interfaccia utente o database.\\
 Quindi se codice di alto livello dipende dal codice di basso livello, significa che modifiche a quest'ulitmo, avranno un impatto sul codice di alto livello.\\
 Si prende come esempio un'architettura OO dove la parte più alta indica codice di alto livello.\\
 \begin{wrapfigure}{r}{5cm}
-  \includegraphics[width=0.5\linewidth]{../immagini/principio_SOLID/architetturaOOnoDIP}  
+  \includegraphics[width=0.5\linewidth]{../../immagini/principio_SOLID/architetturaOOnoDIP}  
 \end{wrapfigure}
 
 Vediamo che il layer di alto livello usa solo il layer sottostante ma usare significa che dipende dal layer sottostante.\\
@@ -406,7 +406,7 @@ Per risolvere questo problema
 Così facendo, le dipendenze vengono invertite, ovvero sono i layer di basso livello a dipendere dai layer di alto livello.\\
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.5\linewidth]{../immagini/principio_SOLID/architetturaOODIP}  
+  \includegraphics[width=0.5\linewidth]{../../immagini/principio_SOLID/architetturaOODIP}  
 \end{figure}
 
 staticamente Policy chiama un metodo dell'interfaccia, a runtime verrà invocato l'implementazione di tale metodo dal layer inferiore.\\
