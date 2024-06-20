@@ -210,7 +210,8 @@ Esempio pratico sono i software basati sui plug-in, ovveri software che non è p
 
 \section{Liskow Substitution Principle (LSP)}
  
-Questo principio si basa sul concetto di sottotipo.\\
+Questo principio si basa sul concetto di sottotipo.
+
 In java, un oggetto di tipo T sottotitpo di S, detto supertipo, può essere sempre
 \begin{itemize}
   \item assegnato a una variabile dichiarata di tipo S;
@@ -218,8 +219,12 @@ In java, un oggetto di tipo T sottotitpo di S, detto supertipo, può essere semp
   \item restituito in un metodo il cui tipo di ritorno è S.
 \end{itemize}
 
-Per un sottotitpo valgono la proprietà riflessiva, ovvero database una classe A, A è sottotipo di se stessa (si indica con $A<:A$) e la proprietà transitiva, ovvero siano A, B e C tre classi, se $A<:B$ e $B<:C\Rightarrow A<:C$.\\
-Il prinicipio di Liskow è qualcosa di più forte della definizione di sottotipo, ovvero, vuole che il comportamento del programma, quando sostituisco S con T, non cambia, non si rompe, continua a funzionare correttamente (non significa che non cambia nulla, altrimenti non avrebbe senso).\\
+Per un sottotitpo valgono la proprietà riflessiva, ovvero data una classe A, A è sottotipo di se stessa (si indica con $A<:A$) e la proprietà transitiva, ovvero siano 
+A, B e C tre classi, se $A<:B$ e $B<:C\Rightarrow A<:C$.
+
+Il prinicipio di Liskow è qualcosa di più forte della definizione di sottotipo, ovvero, vuole che il comportamento del programma, quando sostituisco S con T, non 
+cambia, non si rompe, continua a funzionare correttamente (non significa che non cambia nulla, altrimenti non avrebbe senso).
+
 Per esempio, ho una classe Rectangle con due campi, height e weight, metodi setter ed un metodo area.
 \begin{multicols}{2}
   \begin{lstlisting}
@@ -287,9 +292,12 @@ Presi singolarmente, i test passano, ora, però, bisogna vedere che, se applican
   }
 \end{lstlisting}
 
-Questo test fallisce perchè, quando chiamo in sequenza i due metodi setter, questi saranno chiamati da quadrato e non da rettangolo (ricordati del binding dinamico).\\
-Quindi Square non è sostituibile a Rectangle anche perchè alla classe Square, alla fine dei conti serve un solo campo.\\
-Per risolvere il problema possiamo pensare di eliminare i due metodi setter ed introdurre un'interafccia, Shape, con all'interno la definizione del metodo area.\\
+Questo test fallisce perchè, quando chiamo in sequenza i due metodi setter, questi saranno chiamati da quadrato e non da rettangolo (binding dinamico).
+
+Quindi Square non è sostituibile a Rectangle anche perchè alla classe Square, alla fine dei conti serve un solo campo.
+
+Per risolvere il problema possiamo pensare di eliminare i due metodi setter ed introdurre un'interafccia, Shape, con all'interno la definizione del metodo area.
+
 Così facendo, entrambe le classi concrete, implementeranno Shape e ridefineranno, a modo loro, il metodo area attraverso override.
 
 \begin{center}
@@ -347,11 +355,18 @@ Detto in parole povere, bisogna cercare di lavorare, il più possibile, con clas
 \newpage
 \section{Iterafce Segregation Principle (ISP)}
 
-È simile all’SRP ma incentrato su interfacce e client.\\
-Supponiamo di avere a disposizione un'interfaccia contente metodi che svolgono differenti compiti.\\ 
-Un client che implementerà questa interfaccia, sarà costretto ad implementare tutti i suoi metodi, anche quelli che non gli servono.\\
-Se un client richiedesse una modifica all’interfaccia, anche gli altri client ne sarebbero influenzati, anche se la modifica dovesse riguardare un metodo che a loro non serve.\\
-Quindi sarebbe conveniente dividere l'interfaccia originale in interfacce più piccole, così facendo l'interfaccia originale conterrà solo i metodi comuni ai client, mentre le interfacce più piccole si occuperanno dei metodi specifici.\\
+È simile all’SRP ma incentrato su interfacce e client.
+
+Supponiamo di avere a disposizione un'interfaccia contente metodi che svolgono differenti compiti.
+
+Un client che implementerà questa interfaccia, sarà costretto ad implementare tutti i suoi metodi, anche quelli che non gli servono.
+
+Se un client richiedesse una modifica all’interfaccia, anche gli altri client ne sarebbero influenzati, anche se la modifica dovesse riguardare un metodo che a loro
+non serve.
+
+Quindi sarebbe conveniente dividere l'interfaccia originale in interfacce più piccole, così facendo l'interfaccia originale conterrà solo i metodi comuni ai client, 
+mentre le interfacce più piccole si occuperanno dei metodi specifici.
+
 Prendiamo ad esempio il sistema di pagamento di un parcheggio
 
 \begin{lstlisting}[linewidth=15cm]
@@ -369,10 +384,15 @@ Prendiamo ad esempio il sistema di pagamento di un parcheggio
   }
 \end{lstlisting}
 
-Immaginiamo di voler implementare un parcheggio gratuito (che estenderà Parcheggio) e notiamo che abbiamo obbligato questa classe ad implementare i metodi di pagamento del parcheggio anche se non ne avrebbe bisogno (è gratis) e magari, nel metodo pagamento, lanciamo un'eccezione gestita con un semplice "il parchegio è gratis".\\
-Quindi si nota che l'interfaccia Parcheggio si occupa di due logiche distinte, quella del parcheggio e quella del pagamento del parcheggio stesso.\\
-Una possibile soluzione, quindi, sarebbe quella di scindere l'interfaccia parcheggio in altre due interfacce, quella a pagamento e quella gratis, la prima oltre ad ereditare i metodi rifeirti al parcheggio, aggiungerà i metodi riguardanti i pagamenti, mentre la seconda, implementrà l'interfaccia padre.\\
-Con questo nuovo modello, possiamo anche andare oltre e dividere l'interfaccia pagamento per supportare diverse modalità di pagamento.\\
+Immaginiamo di voler implementare un parcheggio gratuito (che estenderà Parcheggio) e notiamo che abbiamo obbligato questa classe ad implementare i metodi di pagamento
+del parcheggio anche se non ne avrebbe bisogno (è gratis) e magari, nel metodo pagamento, lanciamo un'eccezione gestita con un semplice "il parchegio è gratis".
+
+Quindi si nota che l'interfaccia Parcheggio si occupa di due logiche distinte, quella del parcheggio e quella del pagamento del parcheggio stesso.
+
+Una possibile soluzione, quindi, sarebbe quella di scindere l'interfaccia parcheggio in altre due interfacce, quella a pagamento e quella gratis, la prima oltre 
+ad ereditare i metodi riferiti al parcheggio, aggiungerà i metodi riguardanti i pagamenti, mentre la seconda, implementrà l'interfaccia padre.
+
+Con questo nuovo modello, possiamo anche andare oltre e dividere l'interfaccia pagamento per supportare diverse modalità di pagamento.
 
 \begin{figure}[H]
   \centering
@@ -381,37 +401,48 @@ Con questo nuovo modello, possiamo anche andare oltre e dividere l'interfaccia p
 
 \section{Dependency Inversion Principle (DIP)}
 
-Questo principio ci dice che i sistemi più flessibili sono quelli dove le dipendenze del codice sorgente si riferiscono solo alle astrazioni.\\
-Per dipendenza nel codice sorgente si intende che, dato un file Client.java, se in dato file nomino un tipo A, allora diremo che il codice sorgente di Client dipende da A.\\
-Anche se in un dato Client.java useremo un sottotipo di A, B, diremo che Client dipende, staticamente, da A.\\
-Da qui utilizzeremo il concetto di modulo/componente inteso come raggruppamento di classi.\\
-Tradizionalemente, i moduli di alto livello dipendono dai moduli di basso livello.\\
-Per dipendere si intende chiamare direttamente codice di basso livello o istanziare direttamente classi concrete.\\
-Per codice di alto livello, detto anche core, intendiamo la parte di un'applicazione computazionale, algoritmica o che elabora, ovvero è la parte che contraddistingue un'applicazione.\\
-Mentre per codice di basso livello intendiamo interfaccia utente o database.\\
-Quindi se codice di alto livello dipende dal codice di basso livello, significa che modifiche a quest'ulitmo, avranno un impatto sul codice di alto livello.\\
-Si prende come esempio un'architettura OO dove la parte più alta indica codice di alto livello.\\
+Questo principio ci dice che i sistemi più flessibili sono quelli dove le dipendenze del codice sorgente si riferiscono solo alle astrazioni.
+
+Per dipendenza nel codice sorgente si intende che, dato un file Client.java, se in dato file nomino un tipo A, allora diremo che il codice sorgente di Client dipende 
+da A.
+
+Anche se in un dato Client.java useremo un sottotipo di A, B, diremo che Client dipende, staticamente, da A.
+
+Da qui utilizzeremo il concetto di modulo/componente inteso come raggruppamento di classi.
+
+Tradizionalemente, i moduli di alto livello dipendono dai moduli di basso livello, per dipendere si intende chiamare direttamente codice di basso livello o istanziare
+direttamente classi concrete.
+
+Per codice di alto livello, detto anche core, intendiamo la parte di un'applicazione computazionale, algoritmica o che elabora, ovvero è la parte che contraddistingue 
+un'applicazione.
+
+Mentre per codice di basso livello intendiamo interfaccia utente o database.
+
+Quindi se il codice di alto livello dipende dal codice di basso livello, significa che modifiche a quest'ulitmo, avranno un impatto sul codice di alto livello.
+
+Si prende come esempio un'architettura OO dove la parte più alta indica codice di alto livello.
 \begin{wrapfigure}{r}{5cm}
   \includegraphics[width=0.5\linewidth]{../../immagini/principio_SOLID/architetturaOOnoDIP}  
 \end{wrapfigure}
 
-Vediamo che il layer di alto livello usa solo il layer sottostante ma usare significa che dipende dal layer sottostante.\\
-Inolte se il layer sottostante dipende dal layer di basso livello, allora il layer di alto livello, transitivamente, dipende dal layer di basso livello.\\
+Il layer di alto livello usa solo il layer sottostante ma usare significa che dipende dal layer sottostante.
+
+Inolte se il layer sottostante dipende dal layer di basso livello, allora il layer di alto livello, transitivamente, dipende dal layer di basso livello.
+
 Per risolvere questo problema
 \begin{itemize}
   \item ogni layer di alto livello dovrebbe dichiarare una propria interfaccia per i servizi di cui ha bisogno e farla implementare al layer sottostante;
   \item il layer sottostante implementerà l'interfaccia dichiarata dal layer superiore.
 \end{itemize}
 
-Così facendo, le dipendenze vengono invertite, ovvero sono i layer di basso livello a dipendere dai layer di alto livello.\\
+Così facendo, le dipendenze vengono invertite, ovvero sono i layer di basso livello a dipendere dai layer di alto livello.
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.5\linewidth]{../../immagini/principio_SOLID/architetturaOODIP}  
 \end{figure}
 
-staticamente Policy chiama un metodo dell'interfaccia, a runtime verrà invocato l'implementazione di tale metodo dal layer inferiore.\\
-Così facendo, posso cambiare un layer sottostante senza modificare un layer soprastante e posso testare un layer soprastante senza avere un layer
-sottostante ed inoltre.\\
-E' buona cosa non menzionare mai il nome di qualcosa che è concreto (non astratto) e volatile (che cambia spesso) e non avervi riferimento.\\
+staticamente Policy chiama un metodo dell'interfaccia, a runtime verrà invocato l'implementazione di tale metodo dal layer inferiore, così facendo, posso cambiare un
+layer sottostante senza modificare un layer soprastante e posso testare un layer soprastante senza avere un layer sottostante ed inoltre è buona cosa non menzionare 
+mai il nome di qualcosa che è concreto (non astratto) e volatile (che cambia spesso) e non avervi riferimento.
 
 Quindi, i design pattern guidano lo sviluppo del codice e il refactoring aiutando a sviluppare software pulito e facile da estendere, riusare, mantenere e testare.
