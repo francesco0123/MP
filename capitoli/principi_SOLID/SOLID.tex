@@ -420,8 +420,9 @@ Mentre per codice di basso livello intendiamo interfaccia utente o database.
 
 Quindi se il codice di alto livello dipende dal codice di basso livello, significa che modifiche a quest'ulitmo, avranno un impatto sul codice di alto livello.
 
+\newpage
 Si prende come esempio un'architettura OO dove la parte più alta indica codice di alto livello.
-\begin{wrapfigure}{r}{5cm}
+\begin{wrapfigure}{r}{8cm}
   \includegraphics[width=0.5\linewidth]{../../immagini/principio_SOLID/architetturaOOnoDIP}  
 \end{wrapfigure}
 
@@ -438,7 +439,7 @@ Per risolvere questo problema
 Così facendo, le dipendenze vengono invertite, ovvero sono i layer di basso livello a dipendere dai layer di alto livello.
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.5\linewidth]{../../immagini/principio_SOLID/architetturaOODIP}  
+  \includegraphics[width=0.35\linewidth]{../../immagini/principio_SOLID/architetturaOODIP}  
 \end{figure}
 
 staticamente Policy chiama un metodo dell'interfaccia, a runtime verrà invocato l'implementazione di tale metodo dal layer inferiore, così facendo, posso cambiare un
