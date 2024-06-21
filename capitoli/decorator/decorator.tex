@@ -1,6 +1,6 @@
 \chapter{DECORATOR}
 
-Pattern strutturale basato su object composition e delegation.
+Pattern \underline{strutturale} basato su object composition e delegation.
 
 Il suo intento è quello di aggiungere,  dinamicamente, responsabilità ad un oggetto senza influenzare gli altri oggetti. 
 
@@ -9,9 +9,8 @@ Caso d'uso è la GUI dove, per esempio, vogliamo decorare una finestra con un bo
 Questo pattern fornisce una soluzione più flessibile riguardo l'utilizzo dell'ereditarietà con la quale si avrebbe un'esplosione di sottoclassi perchè, per cambiare 
 una decorazione, dovremmo creare una nuova instanza di un'altra classe.
 
-L'idea di base è quella di racchiudere l'oggetto (\textbf{decorato}) in un altro oggetto (\textbf{decoratore}).
-
-Il decoratore delega i metodi all'oggetto decorato e aggiunge del comportamento prima o dopo la delega.
+L'idea di base è quella di racchiudere l'oggetto (\textbf{decorato}) in un altro oggetto (\textbf{decoratore}) che delega i metodi all'oggetto decorato aggiungendo del 
+comportamento prima o dopo la delega.
 
 \medskip
 \textbf{N.B.}Il decoratore ha la stessa interfaccia dell'oggetto decorato e questo permette di avere tanti decoratori annidati ricorsivamente.
@@ -29,7 +28,7 @@ Il decoratore delega i metodi all'oggetto decorato e aggiunge del comportamento 
 
 \textbf{Decorator} definisce un'interfaccia conforme a Component ed ha un riferimento al Component.
 
-\textbf{ConcreteDecorator} aggiunge responsabilità prima o dopo al Component.
+\textbf{ConcreteDecorator} aggiunge responsabilità al Component.
 \medskip
 
 Il Decorator inoltra, di default, le richieste al Component e i ConcreteDecorator aggiungono il comportamento prima o dopo l'inoltro.
@@ -39,14 +38,14 @@ Il Decorator inoltra, di default, le richieste al Component e i ConcreteDecorato
 \medskip
 
 Per l’interface conformance, decorator e componenti devono avere una superclasse comune e tale interfaccia, Component, deve essere il più leggera possibile, deve 
-concentrarsi solo sul definire un'interfaccia e non uno stato in quanto mettere troppe funzionalità in Component porterà, alle sottoclassi, ad avere funzionalità che 
+concentrarsi solo sul definire un'interfaccia e non uno stato in quanto mettere troppe funzionalità in Component porterà, le sottoclassi, ad avere funzionalità che 
 non gli competono.
 
 \section{Conseguenza}
 
 Un sistema basato su questo pattern avrà a che fare con tanti piccoli oggetti che differiscono per il modo in cui sono iterconnessi e composti.
 
-Questi sistemi sono flessibili e facile da customizzare ma sono difficli da comprendere e debuggare.
+Questi sistemi sono flessibili e facili da customizzare ma sono difficli da comprendere e debuggare.
 
 Se esiste un solo tipo di decorazione, la classe astratta Decorator non serve.
 
@@ -69,15 +68,15 @@ Il Decorator ha la stessa interfaccia del suo Component mentre lo Strategy ha la
 \section{Implementazione senza e con l'entità AbstractDecorator}
 
 Sono due versione del pattern Decorator, nella prima avremo l'interfaccia SaySomething implementata direttamente sia da SaySomethingConcrete che da 
-SaySomethingBeforeConcreteDecorator e SaySomethingAfterConcreteDecorator e due decoratori avranno un riferimento a SaySomething e chiameranno direttamente l'inoltro 
-su quest'ultimo, aggiungendo del comportamento prima o dopo l'effettivo inoltro.
+SaySomethingBeforeConcreteDecorator e SaySomethingAfterConcreteDecorator dovee i due decoratori avranno un riferimento a SaySomething e chiameranno direttamente 
+l'inoltro su quest'ultimo, aggiungendo del comportamento prima o dopo l'effettivo inoltro.
 
 Nella seconda versione, SaySomething verrà implementata da SaySomethingConcrete e da SaySomethingDecorator che verrà estesa dai decoratori visti prima.
 
 A differenza della prima versione, sarà SaySomethingDecorator ad avere un riferimento a SaySomething e ci chiamerà l'inoltro, mentre i due decoratori si occuperanno di 
 aggiungere del comportamento prima o dopo l'inoltro.
 
-I decoratori, non avendo un riferimento diretto a SaySomething, non potranno chiamre l'inoltro su SaySomething, ma lo delegheranno a SaySomethingDecorator attraverso 
+I decoratori, non avendo un riferimento diretto a SaySomething, non potranno chiamare l'inoltro su SaySomething, ma lo delegheranno a SaySomethingDecorator attraverso 
 il super.
 
 \begin{figure}[H]
@@ -92,12 +91,12 @@ il super.
 
 Aggiungere nuovi tipi di decorator è facile, basta implementare/estendere e poi avvolgere SaySomething.
 
-Il difficile è rimuovere un decorator in quanto la catena delle decorazioni deve essere ricreta, dove l'oggetto SaySomething finale non deve essere re-instanziato, 
+Il difficile è rimuovere un decorator in quanto la catena delle decorazioni deve essere ricreta, dove l'oggetto SaySomething finale non deve essere re-istanziato, 
 mentre i decoratori intermedi si.
 
 \medskip
 \textbf{N.B.} Quando passiamo il componente da decorare in un decorator, il componente non deve essere null (deve essere documentato nel javadoc), infatti occorre 
-fare un controllo la prima volta che ci viene fornito un componente da decorare null (bisognerà anche testare questio scenario).
+fare un controllo la prima volta che ci viene fornito un componente da decorare null (bisognerà anche testare questo scenario).
 
 \section{L'inoltro}
 
@@ -123,5 +122,5 @@ Le lambda si usano con le interfacce funzionali (un solo metodo), quindi è appl
 Quindi, nell'esempio visto prima, SaySomething è un'interfaccia funzionale, quindi eleggibile all'utilizzo delle lambda.
 
 Una stessa lambda può essere usata più volte all'interno di una composizione (invece con i decorator dovevamo creare obbligatoriamente due instanze per la stessa 
-funzione), inoltre la composizione di una lambda è \textit{lineare} (fluent interface), mentre la composizione del Decorator è 
-\textit{annidata} (la linearità è più leggibile).
+funzione), inoltre la composizione di una lambda è \textit{lineare} (fluent interface), mentre la composizione del Decorator è \textit{annidata} (la linearità è 
+più leggibile).
