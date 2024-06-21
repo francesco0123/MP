@@ -1,7 +1,10 @@
 \chapter{FACADE}
 
-Pattern comportamentale con l'intento di fornire un'interfaccia unificata a un set di interfacce di un sottosistema complesso in modo tale da semplificarne l'utilizzo, 
-nascondendo i dettagli interni delle interfacce, delegando alle interfacce stesse e rendendo il codice più pulito.
+Pattern \underline{comportamentale} con l'intento di fornire un'interfaccia unificata a un set di interfacce di un sottosistema complesso in modo tale da semplificarne 
+l'utilizzo, nascondendo i dettagli interni delle interfacce e delegando alle interfacce stesse, rendendo il codice più pulito.
+
+Il suo intento è quello di fornire vista semplificata di default, di alto livello disaccoppiando i client dai dettagli del sottosistema e facilitanto la strutturazione 
+a strati dove uno strato comunica col sottostante attraverso il facade.
 
 Usando i pattern e seguendo i principi realizziamo sistemi complessi costituiti da tanti piccoli componenti, disaccoppiati il più possibile e facilmente 
 intercambiabili (riusabili), eventualmente anche a runtime.
@@ -12,42 +15,69 @@ Chi vuole può manipolare e interagire direttamente coi singoli componenti trami
 
 Per visitare un'espressione avevamo a disposizione due visitor, ExpressionTypeSystemVisitor ed ExpressionEvaluatorVisitor.
 
-Tutti i client, per avere il tipo di un’espressione, devono scrivere
+Tutti i client, per avere il tipo di un’espressione, dovevano creare un visitor e chiamare il metodo accept su un'Expression
 
 \begin{lstlisting}
     Expression e = new Multiplication(new Constant(1), new Constant(2));
     Class<?> result = e.accept(new ExpressionTypeSystemVisitor());
 \end{lstlisting}
 
-espondendo i dettagli interni, ovvero creare un visitor e chiamare il metodo accept su un'Expression.
-
 Con il facade basta aggiungere un intermediario, ExpressioneTypeSystem ed ExpressionEvaluator, che attraverso un metodo, delegano al visitor appropriato.
 
 \begin{multicols}{2}
-\begin{lstlisting}
+    \begin{lstlisting}
 public class ExpressionTypeSystem {
     public Class<?> computeType(Expression e) {
         return e.accept
                 (new ExpressionTypeSystemVisitor());
     }
 }
-\end{lstlisting}
-
+    \end{lstlisting}
 \columnbreak
-
-\begin{lstlisting}
-    Expression e = new Multiplication(new Constant(1), new Constant(2));
-    Class<?> result = new ExpressionTypeSystem()
-                            .computeType(e);
-\end{lstlisting}
+    \begin{lstlisting}
+Expression e = new Multiplication(new Constant(1), new Constant(2));
+Class<?> result = new ExpressionTypeSystem()
+                        .computeType(e);
+    \end{lstlisting}
 \end{multicols}
 
 Stessa cosa con ExpressionEvaluator dove il metodo, in questo caso eval(), farà accept di un ExpressionEvaluatorVisitor su un'Expression.
 
-\section{Conseguenze}
+Nell'esempio del visitor, il valutatore dava per scontato che le espressioni fossero già state controllate dal type system e quindi i client dovevano usare i due 
+componenti nell’ordine giusto, prima il type system , poi, se non ci sono errori di tipo, il valutatore
+\begin{lstlisting}
+Expression e = new Multiplication(new Constant(1), new Constant(2));
+Class<?> type = new ExpressionTypeSystem().computeType(e);
+// in case catch exception
+Object result = new ExpressionEvaluator().eval(e)
+\end{lstlisting}
 
-Scherma i client dai dettagli del sottosistema riducendo il numero di oggetti con cui i client devono interagire e rendendo il sottosistema più facile da usare.
+Quindi, a questo possiamo nascondere ulteriormente, ovverro aggiungere un nuovo facade del tipo
+\begin{lstlisting}
+public class ExpressionInterpreter {
+    public Object interpret(Expression expression) throws ExpressionInterpreterException {
+        try {
+            // ignore type result, as long as it's well-typed
+            new ExpressionTypeSystem().computeType(expression);
+            return new ExpressionEvaluator().eval(expression);
+        } catch (TypeSystemException e) {
+            throw new ExpressionInterpreterException("Expression not well-typed", e);
+        }
+    }
+}
+\end{lstlisting}
 
-Non impedisce di usare direttamente il sottosistema in caso di bisogno.
+cosicchè alla fine i Client dovranno solamente scrivere
+\begin{lstlisting}
+Expression e = new Multiplication(new Constant(1), new Constant(2));
+// in case catch exception
+Object result = new ExpressionInterpreter().interpret(e);
+\end{lstlisting}
 
-Disaccoppia i client dai dettagli del sottosistema e facilita la strutturazione a strati (“layers”) di un sistema.
+\textbf{N.B.} I Client possono comunque usare direttamente tutto quello che c'è dietro.
+
+\section{Altro caso di utilizzo}
+
+Supponiamo che il client sia il nostro codice ed il sottosistema siano librerie esterne.
+
+Il Facade farà da tramite fra il nostro codice e la libreria esterna cosicchè se un giorno decidessimo di cambiare la librearia, dovremo solo modificare il Facade.
