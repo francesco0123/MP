@@ -1,0 +1,53 @@
+\chapter{FACADE}
+
+Pattern comportamentale con l'intento di fornire un'interfaccia unificata a un set di interfacce di un sottosistema complesso in modo tale da semplificarne l'utilizzo, 
+nascondendo i dettagli interni delle interfacce, delegando alle interfacce stesse e rendendo il codice più pulito.
+
+Usando i pattern e seguendo i principi realizziamo sistemi complessi costituiti da tanti piccoli componenti, disaccoppiati il più possibile e facilmente 
+intercambiabili (riusabili), eventualmente anche a runtime.
+
+Chi vuole può manipolare e interagire direttamente coi singoli componenti tramite tipi astratti oppure può interagire con la “facciata” semplificata dei Facade.
+
+\section{Esempio Visitor con Expression}
+
+Per visitare un'espressione avevamo a disposizione due visitor, ExpressionTypeSystemVisitor ed ExpressionEvaluatorVisitor.
+
+Tutti i client, per avere il tipo di un’espressione, devono scrivere
+
+\begin{lstlisting}
+    Expression e = new Multiplication(new Constant(1), new Constant(2));
+    Class<?> result = e.accept(new ExpressionTypeSystemVisitor());
+\end{lstlisting}
+
+espondendo i dettagli interni, ovvero creare un visitor e chiamare il metodo accept su un'Expression.
+
+Con il facade basta aggiungere un intermediario, ExpressioneTypeSystem ed ExpressionEvaluator, che attraverso un metodo, delegano al visitor appropriato.
+
+\begin{multicols}{2}
+\begin{lstlisting}
+public class ExpressionTypeSystem {
+    public Class<?> computeType(Expression e) {
+        return e.accept
+                (new ExpressionTypeSystemVisitor());
+    }
+}
+\end{lstlisting}
+
+\columnbreak
+
+\begin{lstlisting}
+    Expression e = new Multiplication(new Constant(1), new Constant(2));
+    Class<?> result = new ExpressionTypeSystem()
+                            .computeType(e);
+\end{lstlisting}
+\end{multicols}
+
+Stessa cosa con ExpressionEvaluator dove il metodo, in questo caso eval(), farà accept di un ExpressionEvaluatorVisitor su un'Expression.
+
+\section{Conseguenze}
+
+Scherma i client dai dettagli del sottosistema riducendo il numero di oggetti con cui i client devono interagire e rendendo il sottosistema più facile da usare.
+
+Non impedisce di usare direttamente il sottosistema in caso di bisogno.
+
+Disaccoppia i client dai dettagli del sottosistema e facilita la strutturazione a strati (“layers”) di un sistema.
