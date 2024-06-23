@@ -1,11 +1,12 @@
 \chapter{CHAIN OF RESPONSABILITY}
 
-Pattern comportamentale avente lo scopo di evitare di associare il mittente di una richiesta al suo destinatario, dando a più di un oggetto la possibilità di gestire 
-la richiesta.
+Pattern \underline{comportamentale} avente lo scopo di evitare di associare il mittente di una richiesta al suo destinatario, dando a più di un oggetto la 
+possibilità di gestire la richiesta.
 
 Il primo oggetto della catena che riceve la richiesta, la gestisce oppure la inoltra al prossimo candidato che si comporterà nello stesso modo. 
 
-Il client che effettuerà la richiesta, non dovrà preoccuparsi di chi dovrà gestirla, quindi è fondamentale che gli oggetti della catena abbiamo la stessa interfaccia.
+Il client che effettuerà la richiesta, non dovrà preoccuparsi di chi dovrà gestirla, anche perchè non sa chi la gestirà, quindi è fondamentale che gli oggetti 
+della catena abbiamo la stessa interfaccia.
 
 \section{Applicabilità}
 
@@ -14,21 +15,21 @@ essere specificati dinamicamente.
 
 \section{Struttura}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.4\linewidth]{../../immagini/chain_of_responsability/struttura_handler}
 \end{figure}
 
-\textbf{Handler} definisce l'interfaccia per gestire le richieste ed eventualmente implementa il riferimento al successore della catena.
+\textbf{Handler} definisce l'interfaccia per gestire le richieste ed eventualmente implementa il riferimento al successore nella catena;
 
 \textbf{ConcreteHandler} gestisce le richieste per cui è responsabile, può accedere al successore e se può gestire la richiesta, lo fa, altrimenti la inoltra al 
-successore.
+successore;
 
 \textbf{Client} invia la richiesta chiamando un metodo sul primo elemento della catena, ignorandone il tipo effettivo.
 
 Il successore di un Handler può essere passato direttamente al costruttore oppure tramite un setter.
 
-Nel primo caso, dopo che abbiamo creato la catena, non la possiamo più modificare, mentre nel secondo caso è consentito stando però attenti alla creazione di cicli.
+Nel primo caso, dopo che abbiamo creato la catena, non la possiamo più modificare, mentre nel secondo caso è consentito stando però attenti al non creare cicli.
 
 \section{Conseguenze}
 
@@ -52,7 +53,7 @@ Entrambi i pattern sembrano simili ma
 
 \begin{multicols}{2}
     \begin{itemize}
-        \item [] ha due classi astratta;
+        \item [] ha due classi principali astratta;
         \item [] \textit{tutte} le classi gestiscono la richiesta;
         \item [] il componente da decorare non deve essere null;
         \item [] pattern strutturale

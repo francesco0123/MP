@@ -1,19 +1,16 @@
 \chapter{DECORATOR}
 
-Pattern \underline{strutturale} basato su object composition e delegation.
+Pattern \underline{strutturale}, ovvero descrive come classi e oggetti vengono composti per formare strutture più ampie, è basato su object composition e delegation e 
+il suo intento è quello di aggiungere, dinamicamente, responsabilità ad un oggetto senza influenzare altri oggetti.
 
-Il suo intento è quello di aggiungere,  dinamicamente, responsabilità ad un oggetto senza influenzare gli altri oggetti. 
-
-Caso d'uso è la GUI dove, per esempio, vogliamo decorare una finestra con un bordo, barra di titolo, barra a scorrimento, ecc\dots
-
-Questo pattern fornisce una soluzione più flessibile riguardo l'utilizzo dell'ereditarietà con la quale si avrebbe un'esplosione di sottoclassi perchè, per cambiare 
-una decorazione, dovremmo creare una nuova instanza di un'altra classe.
+Fornisce una soluzione più flessibile riguardo l'utilizzo dell'ereditarietà con la quale si avrebbe un'esplosione di sottoclassi perchè, per cambiare una decorazione, 
+dovremmo creare una nuova instanza di un'altra classe.
 
 L'idea di base è quella di racchiudere l'oggetto (\textbf{decorato}) in un altro oggetto (\textbf{decoratore}) che delega i metodi all'oggetto decorato aggiungendo del 
-comportamento prima o dopo la delega.
+comportamento prima o dopo la inoltro.
 
-\medskip
-\textbf{N.B.}Il decoratore ha la stessa interfaccia dell'oggetto decorato e questo permette di avere tanti decoratori annidati ricorsivamente.
+Il decoratore ha la stessa interfaccia dell’oggetto decorato, quindi la sua presenza è trasparente per i client e ciò permette di avere tanti decoratori annidati
+ricorsivamente.
 
 \section{Struttura}
 
@@ -22,24 +19,24 @@ comportamento prima o dopo la delega.
     \includegraphics[width=0.5\linewidth]{../../immagini/decorator/struttura_decorator}    
 \end{figure}
 
-\textbf{Component} definisce l'interfaccia per gli oggetti a cui è possibile aggiungere, dinamicamente, nuove responsabilità.
+\textbf{Component} definisce l'interfaccia per gli oggetti a cui è possibile aggiungere, dinamicamente, nuove responsabilità;
 
-\textbf{ConcreteComponent} implementa Component.
+\textbf{ConcreteComponent} implementa Component;
 
-\textbf{Decorator} definisce un'interfaccia conforme a Component ed ha un riferimento al Component.
+\textbf{Decorator} ha un riferimento a un oggetto Component e definisce un'interfaccia conforme a Component;
 
-\textbf{ConcreteDecorator} aggiunge responsabilità al Component.
+\textbf{ConcreteDecorator} aggiunge responsabilità all'oggetto Component.
 \medskip
 
-Il Decorator inoltra, di default, le richieste al Component e i ConcreteDecorator aggiungono il comportamento prima o dopo l'inoltro.
+Il Decorator inoltra, di default, le richieste al suo oggetto Component e i ConcreteDecorator aggiungono il comportamento prima o dopo l'inoltro.
 
 \medskip
 \textbf{N.B.}L'inoltro ci deve sempre essere, altrimenti rompiamo la catena di decorazione.
 \medskip
 
-Per l’interface conformance, decorator e componenti devono avere una superclasse comune e tale interfaccia, Component, deve essere il più leggera possibile, deve 
-concentrarsi solo sul definire un'interfaccia e non uno stato in quanto mettere troppe funzionalità in Component porterà, le sottoclassi, ad avere funzionalità che 
-non gli competono.
+Per l’interface conformance, decorator e ConcreteComponent devono avere una superclasse comune e tale interfaccia, Component, deve essere il più leggera possibile, 
+deve concentrarsi solo sul definire un'interfaccia e non uno stato in quanto mettere troppe funzionalità in Component porterà, le sottoclassi, ad avere funzionalità 
+che non gli competono.
 
 \section{Conseguenza}
 
@@ -58,8 +55,8 @@ Potremmo cambiare il componente da decorare se aggiungiamo un setter nel decorat
 Il Decorator rispetta il principio \textit{"Changing the skin of an object versus changing its guts"} (cambiare la pelle invece delle viscere), cambia la pelle di un 
 oggetto avvolgendolo in un decoratore, invece lo Strategy cambia le viscere, ovvero l'oggetto delega allo Strategy il comportamento da seguire.
 
-Component non è a conoscenza dei suoi decoratori, il client utilizza, \textit{senza saperlo}, il Decorator più esterno che farà qualcosa prima o dopo l'inoltro e poi 
-dovrà inoltrare al Component che, a sua volta, se sarà un altro decoratore farà la stessa cosa, altrimenti applicherà il comportamento di default.
+Component non è a conoscenza dei suoi decoratori, il client utilizza, \textit{senza saperlo}, il Decorator più esterno che farà qualcosa prima o dopo l'inoltro al 
+Component che, a sua volta, se sarà un altro decoratore farà la stessa cosa, altrimenti applicherà il comportamento di default.
 
 Nello Strategy, il client \textit{è consapevole} delle diverse implementazioni (ha un riferimento allo Strategy).
 
@@ -68,16 +65,14 @@ Il Decorator ha la stessa interfaccia del suo Component mentre lo Strategy ha la
 \section{Implementazione senza e con l'entità AbstractDecorator}
 
 Sono due versione del pattern Decorator, nella prima avremo l'interfaccia SaySomething implementata direttamente sia da SaySomethingConcrete che da 
-SaySomethingBeforeConcreteDecorator e SaySomethingAfterConcreteDecorator dovee i due decoratori avranno un riferimento a SaySomething e chiameranno direttamente 
+SaySomethingBeforeConcreteDecorator e SaySomethingAfterConcreteDecorator dove i due decoratori avranno un riferimento a SaySomething e chiameranno direttamente 
 l'inoltro su quest'ultimo, aggiungendo del comportamento prima o dopo l'effettivo inoltro.
 
 Nella seconda versione, SaySomething verrà implementata da SaySomethingConcrete e da SaySomethingDecorator che verrà estesa dai decoratori visti prima.
 
 A differenza della prima versione, sarà SaySomethingDecorator ad avere un riferimento a SaySomething e ci chiamerà l'inoltro, mentre i due decoratori si occuperanno di 
-aggiungere del comportamento prima o dopo l'inoltro.
-
-I decoratori, non avendo un riferimento diretto a SaySomething, non potranno chiamare l'inoltro su SaySomething, ma lo delegheranno a SaySomethingDecorator attraverso 
-il super.
+aggiungere del comportamento prima o dopo l'inoltro, inoltre, non avendo un riferimento diretto a SaySomething, non potranno chiamare l'inoltro su SaySomething, ma lo 
+delegheranno a SaySomethingDecorator attraverso il super.
 
 \begin{figure}[H]
 \begin{minipage}[c]{9cm}
