@@ -1,8 +1,8 @@
 
 \chapter{OBSERVER}
 
-E' un design pattern comportamentale utilizzato per gestire le relazioni uno a molti quando lo stato di uno degli oggetti cambia e si richiede l'aggiornamento automatico di 
-altri oggetti dipendenti.
+E' un design pattern \underline{comportamentale} utilizzato per gestire le relazioni uno a molti quando lo stato di uno degli oggetti cambia e si richiede 
+l'aggiornamento automatico di altri oggetti dipendenti.
 \medskip
 
 Classico esempio è quello di excel dove abbiamo una cella caratterizzata da una formula che fa riferimento a più celle "satellite" ed ogni volta che modifichiamo il
@@ -11,14 +11,16 @@ valore di questi satelliti, la cella caratterizzata dalla formula cambia di cons
 
 Questo pattern è basato sul concetto di un oggetto (\textbf{subject}) che tiene traccia dei suoi osservatori (\textbf{observers}).
 
-Tutti gli observer vengono notificati ogni volta che il subject cambia il suo stato (è il subject che notifica e non sono gli osservatori che controllano ogni tot tempo).
+Tutti gli observer vengono notificati ogni volta che il subject cambia il suo stato (è il subject che notifica e non sono gli osservatori che controllano ogni 
+tot tempo).
 
 A quel punto ogni observer può ispezionare lo stato del subject e aggiornare il proprio stato.
 
 \medskip
-\textbf{Il subject non conosce quali observer lo osservano, lui si mantiene una lista di observer ma non conosce la loro implementazione concreta 
+\textbf{N.B.} Il subject non conosce quali observer lo osservano, lui si mantiene una lista di observer ma non conosce la loro implementazione concreta 
 (\textbf{accoppiamento astratto} o abstract coupling).
-Quando notifca, lui non sa a chi sta veramente notificando.}
+
+Quando notifca, lui non sa a chi sta veramente notificando.
 \medskip
 
 Questo pattern favorisce la riduzione della dipendenza tra il soggetto e gli osservatori, permettendo di aggiungere o rimuovere osservatori senza modificare il 
@@ -53,7 +55,8 @@ quello del Subject.
 
 Observer non si riferisce a Subject ma è Subject che si riferisce agli Observer notificandoli.
 
-ConcreteObserver ha un riferimento diretto a ConcreteSubject, mentre ConcreteSubject non lo ha, lo fa indirettamente chiamando il metodo di notifica ereditato da Subject.
+ConcreteObserver ha un riferimento diretto a ConcreteSubject, mentre ConcreteSubject non lo ha, lo fa indirettamente chiamando il metodo di notifica ereditato da 
+Subject.
 
 Il Subject invia una notifica, in modalità broadcast a tutti i suoi Observer e spetterà all'Observer capire se la notifica è di suo interesse oppure no.
 
@@ -69,7 +72,7 @@ notifche continue (sperando che il client si ricordi di chiamare la notifca).
 
 Il pattern è sincrono, ovvero, durante la notifica, aspetta che tutti i suoi Observer aggiornino il proprio stato.
 
-Uno di questi Observer potrebbe essere maldestro, nel senso che ci mette troppo tempo, bloccando tutti gli altri Observer, oppure maligno, magari lanciando un'eccezione.
+Uno di questi Observer potrebbe essere maldestro, nel senso che ci mette troppo tempo, bloccando tutti gli altri, oppure maligno, magari lanciando un'eccezione.
 
 \chapter{PUBLISH SUBSCRIBER}
 
@@ -86,7 +89,5 @@ Questo pattern è asincrono (mentre l'altro è l'opposto), ovvero una volta che 
 ed i mesaggi saranno consegnati, non subito, ai Subscriber appropriati (thread paralleli) ed è alla base dei sistemi ad evento (java swing) dove il messaggio è l'evento 
 e i subscribe sono chiamati listener che si registrano e rimangono in ascolto di un determinato evento.
 
-\section{Vantaggio}
-
 Questo pattern permette di avere un filtraggio dei messaggi, i subscriber dichiarano interesse per un certo tipo di messaggio e il broker si occuperà di consegnare ai 
-subscriber solo i messaggi appropriati.
+subscriber solo i messaggi appropriati, invece, in Observer, spetta agli osservatori occuparsi manualmente del filtraggio.
