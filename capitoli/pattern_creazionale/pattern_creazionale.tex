@@ -26,7 +26,9 @@ Nella classe base il metodo restituirà il tipo dell'interfaccia desiderata, men
 
 Nell'esempio di Application e Document, visto nel Template Method, il metodo createDocument() è il nostro factory method, infatti risulta essere astratto.
 
-Factory Method serve a \textit{“parametrizzare”} rispetto alla creazione di un oggetto, basandosi solo su inheritance, ridefinizione di metodo e binding dinamico. 
+Factory Method serve a \textit{“parametrizzare”} rispetto alla creazione di un oggetto, basandosi solo su inheritance, ridefinizione di metodo e binding dinamico.
+
+Se il linguaggio permette di “passare” un blocco di codice (lambda) che crea un oggetto, si può anche fare a meno di questo pattern.
 
 \subsection{Struttura}
 
@@ -71,13 +73,41 @@ prodotto definito dall’utente.
 In compenso, siamo obbligati a creare una sottoclasse di Creator per creare una certa sottoclasse di Product, un'alternativa è quella di usare le lambda 
 (però non stiamo più parlando del pattern factory method). 
 
-Nel costruttore passiamo l'interfaccia funzionale Supplier ed usiamo il suo metodo astratto, get, nei metodi in cui assegnamo l'istanza.
+Nel costruttore passiamo l'interfaccia funzionale Supplier ed usiamo il suo metodo astratto, get, nei metodi in cui assegnamo l'istanza dove invece di una lambda si 
+può passare il constructor reference.
+
+\begin{multicols}{2}
+\begin{lstlisting}
+public class Client {
+    private MyType f;
+    private Supplier<MyType> myTypeSupplier;
+    
+    public Client(Supplier<MyType> myTypeSupplier) {
+        this.myTypeSupplier = myTypeSupplier;
+    }
+    public void init() {
+        f = myTypeSupplier.get();
+    }
+    public void m() {
+        f.n();
+    }
+    public void reset() {
+        f = myTypeSupplier.get();
+    }
+}
+\end{lstlisting}           
+\columnbreak
+\begin{lstlisting}
+Client baseClient = new Client(MyImpl::new);
+Client derivedClient = new Client(MyOtherImpl::new);
+\end{lstlisting}
+\end{multicols}
 
 \section{Abstract Factory}
 
 Fornisce un’interfaccia per creare famiglie di prodotti correlati o dipendenti senza specificare le loro classi concrete.
 
-Il client non crea gli oggetti direttamente ma delega la loro creazione a un altro oggetto.
+Il Client non crea gli oggetti direttamente ma delega la loro creazione a un altro oggetto.
 
 \subsection{Struttura}
 
@@ -95,6 +125,7 @@ Il client non crea gli oggetti direttamente ma delega la loro creazione a un alt
 \textbf{Product} implementazione di AbstractProduct.
 
 \textbf{Client} utilizza l'AbstractFactory per la creazione di AbstractProduct.
+\medskip
 
 A run-time avremo una singola ConcreteFactory che crea, in modo consistente, una famiglia di prodotti.
 
