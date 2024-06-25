@@ -2,25 +2,20 @@
 
 Pattern \underline{strutturale} (descrive la composizione di classi e oggetti), compone oggetti in strutture ad albero, adatto per tipi di dato ricorsivi.
 
-Le classi client trattano questi oggetti in modo uniforme, indipendentemente dal fatto che si tratti di oggetti semplici o composti, inoltre non sanno e non dovrebbero
-sapere se stanno interagendo con foglie o composti.
+Le classi client trattano questi oggetti in modo uniforme, indipendentemente dal fatto che si tratti di oggetti semplici o composti, inoltre non sanno, e non 
+dovrebbero sapere, se stanno interagendo con foglie o composti.
 
-Sfrutta sia il meccanismo dell'ereditarietà e sia il meccanismo dell'object composition e delegation, il primo attraverso il fatto che un Composite è un Component, il 
-secondo dove Composite è composto da tanti Component e delega operation() ai figli.
+Sfrutta sia il meccanismo dell'ereditarietà e sia il meccanismo dell'object composition e delegation, il primo attraverso il fatto che un Composite è un Component, 
+il secondo dove Composite è composto da tanti Component e delega operation() ai figli.
 
-È facile aggiungere nuovi tipi di componenti, basta creare nuove sottoclassi di Leaf o di Composite.
+È facile aggiungere nuovi tipi di componenti, basta creare nuove sottoclassi di Leaf o di Composite, questi potranno essere usati immediatamente in strutture 
+esistenti ma è difficile imporre dei vincoli sul tipo dei componenti.
 
-Questi potranno essere usati immediatamente in strutture esistenti ma è difficile imporre dei vincoli sul tipo dei componenti.
+Infatti se un composto deve avere solo un certo tipo di figli, probabilmente il pattern non fa al caso nostro, questo pattern non può imporre vincoli statici, in 
+quanto non possono essere controllati dal compilatore (type system) e quindi dovremmo effettuare controlli a runtime ed eventualmente, sollevare eccezioni (no good).
 
-Se un composto deve avere solo un certo tipo di figli, probabilmente il pattern non fa al caso nostro.
-
-Questo pattern non può imporre vincoli statici, in quanto non possono essere controllati dal compilatore (type system) e quindi dovremmo effettuare controlli a runtime
-ed eventualmente, sollevare eccezioni (no good).
-
-Un esempio di applicazione del pattern è il FileSystem.
-
-Avremo la classe astratta FileSystemResource (il nostro Component), la sottoclasse FileSystemFile (Leaf) e FileSystemDirectory (Composite), che contiene al suo interno
-tanti oggetti di tipo FileSystemResource.
+Un esempio di applicazione del pattern è il FileSystem, avremo la classe astratta FileSystemResource (il nostro Component), la sottoclasse FileSystemFile (Leaf) e 
+FileSystemDirectory (Composite), che contiene al suo interno tanti oggetti di tipo FileSystemResource.
 
 \section{Struttura}
 
@@ -57,7 +52,9 @@ tanti oggetti di tipo FileSystemResource.
 Se la richiesta viene inviata ad una foglia, allora viene gestita direttamente, oppure se viene inoltrata ad un oggetto composto, allora viene inoltrata ai figli, 
 facendo, eventualmente, delle operazioni prima e/o dopo l’inoltro.
 
-Le operazioni di gestione dei figli sono in Component, quindi Leaf li dovrebbe overridare sollevando un'eccezione oppure non facendo nulla.
+\medskip
+\textbf{N.B.}Le operazioni di gestione dei figli sono in Component, quindi Leaf li dovrebbe overridare sollevando un'eccezione oppure non facendo nulla.
+\medskip
 
 Per questo motivo abbiamo due versioni di questo pattern, una è quella che abbiamo visto ora, chiamata \textbf{design for uniformity}, e l'altra chiamata 
 \textbf{design for tape safety} dove i metodi di gestione dei figli sono in Composite.
@@ -68,5 +65,5 @@ ottenere errori a runtime.
 Con l'altra versione il client non può chiamare operazioni per la gestione dei figli su Leaf, evitando così errori a runtime, può farlo solo Composite perdendo però 
 uniformità.
 
-Nella variante type safe il client dovrebbe avere un riferimento alla radice della struttura di tipo statico Composite, in caso contrario non potrebbe chiamare i 
-metodi per gestire i figli.
+Inolre il client dovrebbe avere un riferimento, di tipo statico, alla radice della struttura Composite, in caso contrario non potrebbe chiamare i metodi per 
+gestire i figli.
