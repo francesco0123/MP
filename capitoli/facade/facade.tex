@@ -1,50 +1,49 @@
 \chapter{FACADE}
 
-Pattern \underline{comportamentale} con l'intento di fornire un'interfaccia unificata a un set di interfacce di un sottosistema complesso in modo tale da semplificarne 
-l'utilizzo, nascondendo i dettagli interni delle interfacce e delegando alle interfacce stesse, rendendo il codice più pulito.
+Pattern \underline{comportamentale} (descrive come classi e oggetti interagiscono e si distribuiscono le responsabilità) con l'intento di fornire un'interfaccia 
+unificata ad un set di interfacce di un sottosistema complesso in modo tale da semplificarne l'utilizzo, nascondendo i dettagli interni del sottosistemadi 
+interfacce e delegando alle stesse, rendendo il codice più pulito.
 
-Il suo intento è quello di fornire vista semplificata di default, di alto livello disaccoppiando i client dai dettagli del sottosistema e facilitanto la strutturazione 
-a strati dove uno strato comunica col sottostante attraverso il facade.
+Il suo intento è quello di fornire vista semplificata di default, di alto livello disaccoppiando i client dai dettagli del sottosistema e facilitanto la 
+strutturazione a strati dove uno strato comunica col sottostante attraverso il facade.
 
 Usando i pattern e seguendo i principi realizziamo sistemi complessi costituiti da tanti piccoli componenti, disaccoppiati il più possibile e facilmente 
 intercambiabili (riusabili), eventualmente anche a runtime.
 
-Chi vuole può manipolare e interagire direttamente coi singoli componenti tramite tipi astratti oppure può interagire con la “facciata” semplificata dei Facade.
+Chi vuole, può manipolare e interagire direttamente coi singoli componenti tramite tipi astratti oppure può interagire con la “facciata” semplificata dei Facade.
 
 \section{Esempio Visitor con Expression}
 
 Per visitare un'espressione avevamo a disposizione due visitor, ExpressionTypeSystemVisitor ed ExpressionEvaluatorVisitor.
 
 Tutti i client, per avere il tipo di un’espressione, dovevano creare un visitor e chiamare il metodo accept su un'Expression
-
 \begin{lstlisting}
     Expression e = new Multiplication(new Constant(1), new Constant(2));
     Class<?> result = e.accept(new ExpressionTypeSystemVisitor());
 \end{lstlisting}
 
-Con il facade basta aggiungere un intermediario, ExpressioneTypeSystem ed ExpressionEvaluator, che attraverso un metodo, delegano al visitor appropriato.
-
+Con il facade basta aggiungere un intermediario, ExpressioneTypeSystem ed ExpressionEvaluator, che attraverso un metodo, delegano al visitor appropriato
 \begin{multicols}{2}
-    \begin{lstlisting}
-public class ExpressionTypeSystem {
-    public Class<?> computeType(Expression e) {
-        return e.accept
-                (new ExpressionTypeSystemVisitor());
+\begin{lstlisting}
+    public class ExpressionTypeSystem {
+        public Class<?> computeType(Expression e) {
+            return e.accept
+                    (new ExpressionTypeSystemVisitor());
+        }
     }
-}
-    \end{lstlisting}
+\end{lstlisting}
 \columnbreak
-    \begin{lstlisting}
-Expression e = new Multiplication(new Constant(1), new Constant(2));
-Class<?> result = new ExpressionTypeSystem()
+\begin{lstlisting}
+    Expression e = new Multiplication(new Constant(1), new Constant(2));
+    Class<?> result = new ExpressionTypeSystem()
                         .computeType(e);
-    \end{lstlisting}
+\end{lstlisting}
 \end{multicols}
 
 Stessa cosa con ExpressionEvaluator dove il metodo, in questo caso eval(), farà accept di un ExpressionEvaluatorVisitor su un'Expression.
 
 Nell'esempio del visitor, il valutatore dava per scontato che le espressioni fossero già state controllate dal type system e quindi i client dovevano usare i due 
-componenti nell’ordine giusto, prima il type system , poi, se non ci sono errori di tipo, il valutatore
+componenti nell’ordine giusto, prima il type system e poi, se non ci sono errori di tipo, il valutatore
 \begin{lstlisting}
 Expression e = new Multiplication(new Constant(1), new Constant(2));
 Class<?> type = new ExpressionTypeSystem().computeType(e);
