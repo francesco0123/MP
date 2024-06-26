@@ -2,8 +2,8 @@
 
 Pattern \underline{strutturale} (descrive la composizione di classi e oggetti), compone oggetti in strutture ad albero, adatto per tipi di dato ricorsivi.
 
-Le classi client trattano questi oggetti in modo uniforme, indipendentemente dal fatto che si tratti di oggetti semplici o composti, inoltre non sanno, e non 
-dovrebbero sapere, se stanno interagendo con foglie o composti.
+Le classi client trattano questi oggetti in modo uniforme, indipendentemente dal fatto che si tratti di oggetti semplici o composti e non sanno (non 
+devono sapere) se stanno interagendo con foglie o composti.
 
 Sfrutta sia il meccanismo dell'ereditarietà e sia il meccanismo dell'object composition e delegation, il primo attraverso il fatto che un Composite è un Component, 
 il secondo dove Composite è composto da tanti Component e delega operation() ai figli.
@@ -11,7 +11,7 @@ il secondo dove Composite è composto da tanti Component e delega operation() ai
 È facile aggiungere nuovi tipi di componenti, basta creare nuove sottoclassi di Leaf o di Composite, questi potranno essere usati immediatamente in strutture 
 esistenti ma è difficile imporre dei vincoli sul tipo dei componenti.
 
-Infatti se un composto deve avere solo un certo tipo di figli, probabilmente il pattern non fa al caso nostro, questo pattern non può imporre vincoli statici, in 
+Se un composto deve avere solo un certo tipo di figli, probabilmente il pattern non fa al caso nostro, questo pattern non può imporre vincoli statici, in 
 quanto non possono essere controllati dal compilatore (type system) e quindi dovremmo effettuare controlli a runtime ed eventualmente, sollevare eccezioni (no good).
 
 Un esempio di applicazione del pattern è il FileSystem, avremo la classe astratta FileSystemResource (il nostro Component), la sottoclasse FileSystemFile (Leaf) e 
