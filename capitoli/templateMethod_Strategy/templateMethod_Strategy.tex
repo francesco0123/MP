@@ -59,11 +59,11 @@ Il templateMethod porta all'\textit{hollywood principle}, ovvero sono le classi 
 
 \section{Strategy}
 
-Definisce una famiglia di algoritmi, incapsula ogni algoritmo, e li rende intercambiabili.
+Definisce una famiglia di algoritmi, li incapsula, e li rende intercambiabili.
 
 Lo Strategy nasconde le informazioni interne dell’implementazione di un algoritmo, una classe può avere diversi comportamenti a seconda di qualche condizione.
 
-Prendiamo ad esempio un Shop che può applicare più sconti, ad esempio quello percentuale, assoluto o nessuno sconto.
+Prendiamo ad esempio uno Shop che può applicare più sconti, ad esempio percentuale, assoluto o nessuno sconto.
 
 Prima di applicare lo Strategy saremo in una condizione di questo tipo
 \begin{lstlisting}
@@ -188,6 +188,7 @@ I Client devono essere consapevoli che esistono diverse strategie (cioè diverse
 \textbf{ConcreteStrategy} implementa l’interfaccia Strategy e l’algoritmo;
 
 \textbf{Context} usa uno Strategy quando ha bisogno dell’algoritmo che, a runtime, sarà effettivamente implementato da un ConcreteStrategy.
+
 Context ha un riferimento a Strategy che sarà configurato assegnandogli un ConcreteStrategy passandolo al costruttore o tramite un setter, inoltre può definire a sua 
 volta un’interfaccia per permettere a uno Strategy di accedere al suo stato.
 
