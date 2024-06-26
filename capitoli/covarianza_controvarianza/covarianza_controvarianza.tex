@@ -30,7 +30,7 @@ La prima ha al suo interno un metodo find(int) che restiusce un Employee, mentre
     \end{lstlisting}
 \end{multicols}
 
-Se eseguissi questo codice, tutto funzionerebba.
+Se eseguissi questo codice, tutto funzionerebbe.
 
 \begin{lstlisting}
     EmployeeDB d = new ManagerDB();
@@ -73,7 +73,7 @@ Eseguendo questo codice
     d.updateEmployee(new Employee());
 \end{lstlisting}
 
-Come detto prima, per il binding dinamico, d staticamente è EmployeeDB ma a runtime è ManagerDB, quindi il metodo che sarà chiamato, sarà quello di ManagerDB che 
+per il binding dinamico, d staticamente è EmployeeDB ma a runtime è ManagerDB, quindi il metodo che sarà chiamato, sarà quello di ManagerDB che 
 però non esiste e quindi lancerà un'eccezione del tipo NoSuchMethodException.
 
 A livello di compilazione, tutto è ok perchè il metodo updateEmployee(Employee), staticamente è di tipo EmployeeDB ma a runtime chiamerà il metodo di ManagerDB 
