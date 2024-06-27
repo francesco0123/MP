@@ -1,14 +1,17 @@
 \section{Design Pattern VS Design Principle}
 
 Un design pattern sbalisce la linea guida su cosa è giusto e su cosa è sbagliato quando si fa il design di un’applicazione, dice cosa fare (e non fare) e non come farlo.
+\smallskip
 
-Un design principle è una soluzione generica e riusabile per un problema comune, dicono come risolvere un problema in un certo contesto software, fornendo chiare linee guida.
+Un design principle è una soluzione generica e riusabile per un problema comune, dicono come risolvere un problema in un certo contesto software, fornendo chiare linee 
+guida.
 
 \chapter{ACRONIMO SOLID}
 
 I principi SOLID prescrivono come organizzare funzioni e dati in classi e come tali classi dovrebbero essere interconnesse.
 
-Lo scopo di questi principi è la creazione di strutture software che tollerano il cambiamento, sono facili da comprendere/testare e sono riusabili in diversi sistemi software.
+Lo scopo di questi principi è la creazione di strutture software che tollerano il cambiamento, sono facili da comprendere/testare e sono riusabili in diversi sistemi 
+software.
 
 \section{Single Responsability Principle (SRP)}
 
@@ -17,127 +20,129 @@ Prevede che una classe deve avere una sola responsabilità, ovvero deve avere un
 Si dice che la classe deve essere 
 
 \begin{itemize}
-  \item \textit{coesiva}, ovvero quanto le cose di un certo gruppo hanno ragione di stare insieme;
-  \item \textit{loosely coupling}, ovvero deve dipendere il meno possibile dai metodi di altre classi.
+  \item \underline{coesiva}, ovvero quanto le cose di un certo gruppo hanno ragione di stare insieme;
+  \item \underline{loosely coupling}, ovvero deve dipendere il meno possibile dai metodi di altre classi.
 \end{itemize}
 
-Se una classe è responsabile di più cose, la si dovrà cambiare più spesso e cambiare frequentemente una classe porta ad avere ripercussioni su tutte quelle classi che dipendono da lei.
+Se una classe è responsabile di più cose, la si dovrà cambiare più spesso e cambiare frequentemente una classe porta ad avere ripercussioni su tutte quelle classi che 
+dipendono da lei e ciò comporterà nuova ricompliazione e nuovo test dei metodi.
 
-Ciò comporterà, ad ogni modifica, nuova ricompliazione e nuovo test dei metodi.
-
-Prima di aggiungere qualcosa di nuovo a una classe ci si dovrebbe interrogare su quale sia la responsabilità di questa classe, se la risposta comprende funzionalità scorrelate congiunte
-con un “e” o un “oppure” allora, probabilmente, si sta violando l’SRP.
+Prima di aggiungere qualcosa di nuovo a una classe ci si dovrebbe interrogare su quale sia la responsabilità di questa classe e se la risposta comprende funzionalità 
+scorrelate congiunte con un “e” o un “oppure” allora, probabilmente, si sta violando l’SRP.
 
 \section{Open-Closed Principle (OCP)}
 
-Il principio aperto/chiuso stabilisce che le classi debbano essere aperte alle estensioni e chiuse alle modifiche.
+Il principio aperto/chiuso stabilisce che le classi debbano essere aperte alle estensioni e chiuse alle modifiche, ovvero dovremmo essere in grado di aggiungere nuove 
+funzionalità senza toccare il codice attuale della classe, questo perché ogni volta che modifichiamo il codice, rischiamo di dare vita a potenziali bug.
+\smallskip
 
-Per modifica si intende il cambiamento del codice di una classe esistente ed estensione significa aggiungere nuove funzionalità.
+Se nell'SRP si cerca di decomporre la responsabilità, qui si cerca di capire quali parti devono essere concrete (da implementare) e quali devono essere astratte 
+(saranno implementate dai consumatori del software).
+\smallskip
 
-Tutto ciò sta a significare che dovremmo essere in grado di aggiungere nuove funzionalità senza toccare il codice attuale della classe, questo perché ogni volta che modifichiamo il codice,
-rischiamo di dare vita a potenziali bug.
+Negli OOP abbiamo a disposizione il meccanismo dell'ereditarità per creare una classe derivata da una già esistente, il meccanismo dell'override per ridefinire un metodo 
+della classe padre e la funzionalità del binding dinamico che permette, dato un oggetto, di chiamare il metodo giusto a runtime.
 
-Se nell'SRP si cerca di decomporre la responsabilità, qui si cerca di capire quali parti devono essere concrete (da implementare) e quali devono essere astratte (saranno implementate dai 
-consumatori del software).
+Questo, però, non è detto che basti a rispettare OCP, specialmente se si estende una classe concreta o se la classe derivata si basa, \underline{fortemente}, su 
+dettagli implementatitivi della superclasse.
 
-Negli OOP abbiamo a disposizione il meccanismo dell'ereditarità per creare una classe derivata da una già esistente, il meccanismo dell'override per ridefinire un metodo della classe 
-padre e la funzionalità del binding dinamico che permette, dato un oggetto, di chiamare il metodo giusto a runtime.
-
-Questo, però, non è detto che basti a rispettare OCP, specialmente se si estende una classe concreta o se la classe derivata si basa, fortemente, su dettagli implementatitivi della superclasse.
-Per esempio, voglio estendere una classe, MySet, per contare gli elementi inseriti
+Ad esempio, voglio estendere una classe, MySet, per contare gli elementi inseriti
 
 \begin{multicols}{2}
-  \begin{lstlisting}
-    public class MySet<E> {
-      public void add(E o) {
-      // add the element to the internal set
-      }
+\begin{lstlisting}
+public class MySet<E> {
+  public void add(E o) {
+    // add the element to the internal set
+  }
 
-      public void addAll(Collection<E> c) {
-        for (E e : c) {
-          add(e);
-        }
-      }
+  public void addAll(Collection<E> c) {
+    for (E e : c) {
+      add(e);
     }
-  \end{lstlisting}
-  \columnbreak
-  \begin{lstlisting}
-    public class MyCountingSet<E> extends MySet<E> {
-      private int count = 0;
-      
-      @Override
-      public void add(E o) {
-        super.add(o);
-        count++;
-      }
-    } 
-  \end{lstlisting}
+  }
+}
+\end{lstlisting}
+\columnbreak
+\begin{lstlisting}
+public class MyCountingSet<E> extends MySet<E> {
+  private int count = 0;
+  
+  @Override
+  public void add(E o) {
+    super.add(o);
+    count++;
+  }
+} 
+\end{lstlisting}
 \end{multicols}
 
 \newpage
-Se io modificassi MySet, ad esempio modifico addAll(), non chiamando più dentro add(), allora la mia classe derivata non sarebbe più corretta, in quanto non avremo più un aumento del contatore.
-
-Quindi, per risolvere questo problema, devo modificare la mia classe, facendo override anche del secondo metodo
+Se io modificassi MySet, ad esempio modificando addAll(), non chiamando più dentro add(), allora la mia classe derivata non sarebbe più corretta, in quanto non avremo 
+più un aumento del contatore e quindi, per risolvere questo problema, devo modificare la mia classe, facendo override anche del secondo metodo
 
 \begin{multicols}{2}
-  \begin{lstlisting}
-    public class MySet<E> {
-      public void add(E o) {
-      // add the element to the internal set
-      }
+\begin{lstlisting}
+public class MySet<E> {
+  public void add(E o) {
+  // add the element to the internal set
+  }
 
-      public void addAll(Collection<E> c) {
-        // add directly all elements
-        // WITHOUT relying on add
-      }
-    }
-  \end{lstlisting}
-  \columnbreak
-  \begin{lstlisting}
-    public class MyCountingSet<E> extends MySet<E> {
-      private int count = 0;
-      
-      @Override
-      public void add(E o) {
-        super.add(o);
-        count++;
-      }
+  public void addAll(Collection<E> c) {
+    // add directly all elements
+    // WITHOUT relying on add
+  }
+}
+\end{lstlisting}
+\columnbreak
+\begin{lstlisting}
+public class MyCountingSet<E> extends MySet<E> {
+  private int count = 0;
+  
+  @Override
+  public void add(E o) {
+    super.add(o);
+    count++;
+  }
 
-      @Override
-      public void addAll(Collection<E> c) {
-        super.addAll(c);
-        count += c.size();
-      }
-    } 
-  \end{lstlisting}
+  @Override
+  public void addAll(Collection<E> c) {
+    super.addAll(c);
+    count += c.size();
+  }
+} 
+\end{lstlisting}
 \end{multicols}
 
-Inoltre, se ad un certo punto tornassi alla versione originale di MySet, avrei lo stesso problema, ovvero MyCountingSet non funzionerebbe più in quanto il contatore verrebbe incrementato due 
-volte ogni volta.
+Inoltre, se ad un certo punto tornassi alla versione originale di MySet, avrei lo stesso problema, ovvero MyCountingSet non funzionerebbe più in quanto il contatore 
+verrebbe incrementato due volte ad ogni aggiunta, quindi possiamo vedere come le modifiche fatte a MySet, essendo giuste o minimali, sono devastanti per la mia 
+sottoclasse.
+\smallskip
 
-Quindi possiamo vedere che le modifiche fatte a MySet possono anche essere giuste o minimali ma sono devastanti per la mia sottoclasse.
+Questo porta al concetto della \textbf{fragile base class problem}, ovvero una classe è considerata fragile se piccole modifiche corrette e sicure alla classe base, 
+possono portare le classi derivate a non funzionare più correttamente.
 
-Questo porta al concetto della \textbf{fragile base class problem}, ovvero una classe è considerata fragile se piccole modifiche corrette e sicure alla classe base, possono portare le classi 
-derivate a non funzionare più correttamente.
+Una soluzione sarebbe quella di proibire l'estensione della classe (con un final), proibire la ridefinizione di alcuni metodi (anche qui final) e documentare come una 
+classe base dovrebbe essere usata/estesa.
+\smallskip
 
-Quindi sarebbe meglio proibire l'estensione della classe (con un final), proibire la ridefinizione di alcuni metodi (anche qui final) e documentare come una classe base dovrebbe essere usata/estesa.
-
-Allora, dal concetto di classi concrete ed ereditarietà, arriviamo al concetto di classi astratte o interfacce ed, eventualmente, al principio di composizione e delega.
+Dal concetto di classi concrete ed ereditarietà, arriviamo al concetto di classi astratte o interfacce ed, eventualmente, al principio di composizione e delega.
 
 \begin{wrapfigure}{r}{3cm}
-  \includegraphics[width=0.5\linewidth]{../../immagini/principio_SOLID/esempioOCP}  
+  \includegraphics[width=2.5cm]{../../immagini/principio_SOLID/esempioOCP}  
 \end{wrapfigure}
 
-Prediamo come esempio la classe astratta Policy che ha un metodo, public e probabilmente final, PolicyFunction che, a sua volta, implementa una certa politica in termini di un metodo, protetto e 
-astratto, ServiceFunction.
+Prediamo come esempio la classe astratta Policy che ha un metodo, public e probabilmente final, PolicyFunction che, a sua volta, implementa una certa politica in 
+termini di un metodo, protetto e astratto, ServiceFunction.
 
-Policy, quindi, ha una parte concreta (PolicyFunction) ed una astratta (ServiceFunction), si dice che è aperta all'estensione, tramite la parte astratta e chiuse alle modifiche dovute al fatto 
-che PolicyFunction è final.
+Policy ha una parte concreta (PolicyFunction) ed una astratta (ServiceFunction), si dice che è aperta all'estensione, tramite la parte astratta e chiuse alle modifiche 
+dovute al fatto che PolicyFunction è final.
+\smallskip
 
-Supponiamo di avere una classe Client che si occupa di fare logging e di voler aggiungere un nuovo tipo di log, basterà, quindi, aggiungere un nuovo tipo di logging ad enum ed un nuovo ramo allo if-else.
+Supponiamo di avere una classe Client che si occupa di fare logging e di voler aggiungere un nuovo tipo di log, basterà, quindi, aggiungere un nuovo tipo di logging ad 
+enum ed un nuovo ramo allo if-else.
 
-Come si vede, la classe è si configurabile rispetto al log ma non è aperta ad estensioni del log in quanto la sua gestione dipende da un if-else/switch e quanfo si usa un if-else/switch, si sta violando 
-OCP, inoltre c'è il dubbio su cosa faccia l'ultimo else (in questo caso non fa nulla).
+Come si vede, la classe è si configurabile rispetto al log ma non è aperta ad estensioni del log in quanto la sua gestione dipende da un if-else/switch e quanfo si usa 
+un if-else/switch, si sta violando OCP, inoltre c'è il dubbio su cosa faccia l'ultimo else (in questo caso non fa nulla).
 
 \begin{lstlisting}[linewidth=10cm]
 public class Client {
@@ -164,7 +169,7 @@ public class Client {
 \end{lstlisting}
 
 \newpage
-Quindi, per risolvere ciò
+Per risolvere ciò
 \begin{itemize}
   \item decidiamo di astrarre la funzionalità di logging attraverso l'interafccia Log che avrà diverse implementazioni come ConsoleLog o FileLog;
   \item la classe Client dichiara una variabile privata di tipo Log;
@@ -172,45 +177,48 @@ Quindi, per risolvere ciò
   \item Client delega completamente il logging all’istanza di Log.
 \end{itemize}
 
-La nuova classe è estendibile a nuovi sistemi di logging, infatti basta creare una nuova implementazione di Log, il Client non è stato minimamente toccato, non c'è stato bisogno di ricompilare.
+La nuova classe è estendibile a nuovi sistemi di logging, infatti basta creare una nuova implementazione di Log, il Client non è stato minimamente toccato, non c'è 
+stato bisogno di ricompilare.
 
 \begin{multicols}{2}
-  \begin{lstlisting}
-    public class Client {
-      private Log logger;
-        
-      public Client(Log log) {
-        this.logger = log;
-      }
-        
-      public void aMethod() {
-        // do something...
-        log("a message");
-        // do something...
-      }
+\begin{lstlisting}
+public class Client {
+  private Log logger;
     
-      private void log(String message) {
-        logger.log(message);
-      }
-    }
-  \end{lstlisting}
-  \columnbreak
-  \begin{lstlisting}
-    public interface Log {
-      public void log(String message)
-    }
+  public Client(Log log) {
+    this.logger = log;
+  }
+    
+  public void aMethod() {
+    // do something...
+    log("a message");
+    // do something...
+  }
 
-    public class ConsoleLog implements Log {...}
+  private void log(String message) {
+    logger.log(message);
+  }
+}
+\end{lstlisting}
+\columnbreak
+\begin{lstlisting}
+public interface Log {
+  public void log(String message)
+}
 
-    public class FileLog implements Log {...}
-  \end{lstlisting}  
+public class ConsoleLog implements Log {...}
+
+public class FileLog implements Log {...}
+\end{lstlisting}  
 \end{multicols}
-Ovviamente le due classi concrete fanno override del metodo log.\\
-Esempio pratico sono i software basati sui plug-in, ovveri software che non è possibile modificare ma estendibili tramite plug-in.\\
+
+Esempio pratico sono i software basati sui plug-in, ovveri software che non è possibile modificare ma estendibili tramite plug-in.
 
 \section{Liskow Substitution Principle (LSP)}
  
-Questo principio si basa sul concetto di sottotipo.
+Questo principio si basa sul concetto di \underline{sottotipo}.
+
+\subsection{Sottotipo}
 
 In java, un oggetto di tipo T sottotitpo di S, detto supertipo, può essere sempre
 \begin{itemize}
@@ -222,150 +230,149 @@ In java, un oggetto di tipo T sottotitpo di S, detto supertipo, può essere semp
 Per un sottotitpo valgono la proprietà riflessiva, ovvero data una classe A, A è sottotipo di se stessa (si indica con $A<:A$) e la proprietà transitiva, ovvero siano 
 A, B e C tre classi, se $A<:B$ e $B<:C\Rightarrow A<:C$.
 
-Il prinicipio di Liskow è qualcosa di più forte della definizione di sottotipo, ovvero, vuole che il comportamento del programma, quando sostituisco S con T, non 
+\subsection{Liskov}
+
+Il principio di Liskow è qualcosa di più forte della definizione di sottotipo, ovvero, vuole che il comportamento del programma, quando sostituisco S con T, non 
 cambia, non si rompe, continua a funzionare correttamente (non significa che non cambia nulla, altrimenti non avrebbe senso).
 
 Per esempio, ho una classe Rectangle con due campi, height e weight, metodi setter ed un metodo area.
 \begin{multicols}{2}
-  \begin{lstlisting}
-  public class Rectangle {
-    private int height, width;
-    
-    public void setHeight(int height) {...}
+\begin{lstlisting}
+public class Rectangle {
+  private int height, width;
 
-    public void setWidth(int width) {...}
-
-    public int area() { return height * width;}
-  }
-  \end{lstlisting}
-  \columnbreak
-  \begin{lstlisting}
-    @Test
-    public void testRectangle() {
-      Rectangle r = new Rectangle();
-      r.setHeight(5);
-      r.setWidth(3);
-      assertEquals(15, r.area());
-    }
-  \end{lstlisting}
+  public void setHeight(int height) {...}
+  public void setWidth(int width) {...}
+  public int area() { return height * width;}
+}
+\end{lstlisting}
+\columnbreak
+\begin{lstlisting}
+@Test
+public void testRectangle() {
+  Rectangle r = new Rectangle();
+  r.setHeight(5);
+  r.setWidth(3);
+  assertEquals(15, r.area());
+}
+\end{lstlisting}
 \end{multicols}
 
-Ora voglio creare la classe Square da rettangolo, tanto basta porre entrambi i lati uguali.\\
+Ora voglio creare la classe Square da rettangolo, tanto basta porre entrambi i lati uguali.
 \begin{multicols}{2}
-  \begin{lstlisting}
-    public class Square extends Rectangle {
-      
-    @Override
-      public void setHeight(int height) {
-        super.setHeight(height);
-        super.setWidth(height);
-      }
+\begin{lstlisting}
+public class Square extends Rectangle {
+  
+@Override
+  public void setHeight(int height) {
+    super.setHeight(height);
+    super.setWidth(height);
+  }
 
-      @Override
-      public void setWidth(int width) {
-        super.setWidth(width);
-        super.setHeight(width);
-      }
-    }
-  \end{lstlisting}
-  \columnbreak
-  \begin{lstlisting}
-    @Test
-    public void testSquare() {
-      Square s = new Square();
-      s.setHeight(5);
-      assertEquals(25, s.area());
-      s.setWidth(3);
-      assertEquals(9, s.area());
-    }
-  \end{lstlisting}
+  @Override
+  public void setWidth(int width) {
+    super.setWidth(width);
+    super.setHeight(width);
+  }
+}
+\end{lstlisting}
+\columnbreak
+\begin{lstlisting}
+@Test
+public void testSquare() {
+  Square s = new Square();
+  s.setHeight(5);
+  assertEquals(25, s.area());
+  s.setWidth(3);
+  assertEquals(9, s.area());
+}
+\end{lstlisting}
 \end{multicols}  
 
-Presi singolarmente, i test passano, ora, però, bisogna vedere che, se applicando il principio di sostituzione, tutto rimane invariato.\\
+Presi singolarmente, i test passano, ora, però, bisogna vedere che, se applicando il principio di sostituzione, tutto rimane invariato.
 \begin{lstlisting}[linewidth=8cm]
-  @Test
-  public void testSquareAsRectangle() {
-    Rectangle r = new Square();
-    r.setHeight(5);
-    r.setWidth(3);
-    assertEquals(15, r.area());
-  }
+@Test
+public void testSquareAsRectangle() {
+  Rectangle r = new Square();
+  r.setHeight(5);
+  r.setWidth(3);
+  assertEquals(15, r.area());
+}
 \end{lstlisting}
 
-Questo test fallisce perchè, quando chiamo in sequenza i due metodi setter, questi saranno chiamati da quadrato e non da rettangolo (binding dinamico).
+Questo test fallisce perchè, quando chiamo in sequenza i due metodi setter, questi saranno chiamati da quadrato e non da rettangolo (binding dinamico), quindi Square 
+non è sostituibile a Rectangle anche perchè alla classe Square, alla fine dei conti serve un solo campo.
+\smallskip
 
-Quindi Square non è sostituibile a Rectangle anche perchè alla classe Square, alla fine dei conti serve un solo campo.
-
-Per risolvere il problema possiamo pensare di eliminare i due metodi setter ed introdurre un'interafccia, Shape, con all'interno la definizione del metodo area.
-
-Così facendo, entrambe le classi concrete, implementeranno Shape e ridefineranno, a modo loro, il metodo area attraverso override.
+Per risolvere il problema possiamo pensare di eliminare i due metodi setter ed introdurre un'interafccia, Shape, con all'interno la definizione del metodo area, così 
+facendo, entrambe le classi concrete, implementeranno Shape e ridefineranno, a modo loro, il metodo area attraverso override.
 
 \begin{center}
-  \begin{tabular}{c}
-    \begin{lstlisting}[linewidth=5cm]
-      public interface Shape {
-        public int area();
-      }
-  \end{lstlisting}
-  \end{tabular}
+\begin{tabular}{c}
+\begin{lstlisting}[linewidth=4cm]
+public interface Shape {
+  public int area();
+}
+\end{lstlisting}
+\end{tabular}
 \end{center}
 
 \begin{multicols}{2}
-  \begin{lstlisting}
-    public class Rectangle implements Shape {
-      private int height, width;
-      
-      public Rectangle(int height, int width) {
-        this.height = height;
-        this.width = width;
-      }
+\begin{lstlisting}
+public class Rectangle implements Shape {
+  private int height, width;
+  
+  public Rectangle(int height, int width) {
+    this.height = height;
+    this.width = width;
+  }
 
-      @Override
-      public int area() { return height * width;}
-    }
-  \end{lstlisting}
-  \columnbreak
-  \begin{lstlisting}
-    public class Square implements Shape {
-      private int side;
-      
-      public Square(int side) {
-        this.side = side;
-      }
-      
-      @Override
-      public int area() { return side * side;}
-    }
-  \end{lstlisting}
+  @Override
+  public int area() { return height * width;}
+}
+\end{lstlisting}
+\columnbreak
+\begin{lstlisting}
+public class Square implements Shape {
+  private int side;
+  
+  public Square(int side) {
+    this.side = side;
+  }
+  
+  @Override
+  public int area() { return side * side;}
+}
+\end{lstlisting}
 \end{multicols}
 
-I test che useranno Shap, passandogli prima Rectangle e poi Square, funzioneranno
+I test che useranno Shape, passandogli prima Rectangle e poi Square, funzioneranno
 \begin{lstlisting}[linewidth=6cm]
-  @Test
-  public void testShape() {
-    Shape s = new Rectangle(5,3);
-    assertEquals(15, s.area());
-    s = new Square(5);
-    assertEquals(25, s.area());
-  }  
+@Test
+public void testShape() {
+  Shape s = new Rectangle(5,3);
+  assertEquals(15, s.area());
+  s = new Square(5);
+  assertEquals(25, s.area());
+}  
 \end{lstlisting}
 
-Detto in parole povere, bisogna cercare di lavorare, il più possibile, con classi astratte o interfacce, lavorare verso l'astrazione e non verso l'implementazione.
+Bisogna cercare di lavorare il più possibile con classi astratte o interfacce, si lavorare verso l'astrazione e non verso l'implementazione.
 
 \newpage
 \section{Iterafce Segregation Principle (ISP)}
 
 È simile all’SRP ma incentrato su interfacce e client.
+\smallskip
 
-Supponiamo di avere a disposizione un'interfaccia contente metodi che svolgono differenti compiti.
+Supponiamo di avere a disposizione un'interfaccia contenente metodi che svolgono differenti compiti.
 
-Un client che implementerà questa interfaccia, sarà costretto ad implementare tutti i suoi metodi, anche quelli che non gli servono.
+Un client che implementerà questa interfaccia, sarà costretto ad implementare tutti i suoi metodi, anche quelli che non gli servono e se un altro client richiedesse una 
+modifica all’interfaccia, anche gli altri client ne sarebbero influenzati, anche se la modifica dovesse riguardare un metodo che a loro non serve.
 
-Se un client richiedesse una modifica all’interfaccia, anche gli altri client ne sarebbero influenzati, anche se la modifica dovesse riguardare un metodo che a loro
-non serve.
-
-Quindi sarebbe conveniente dividere l'interfaccia originale in interfacce più piccole, così facendo l'interfaccia originale conterrà solo i metodi comuni ai client, 
+Quindi sarebbe conveniente dividere l'interfaccia originale in interfacce più piccole, così facendo l'interfaccia originale conterrà solo i metodi comuni ai client 
 mentre le interfacce più piccole si occuperanno dei metodi specifici.
+\smallskip
 
 Prendiamo ad esempio il sistema di pagamento di un parcheggio
 
