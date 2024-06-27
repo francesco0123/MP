@@ -1,17 +1,16 @@
 \chapter{Lambda expression}
+Per comprendere ed usare le lambda, bisogna partire dalle \textit{interfacce}.
 
-\section{Intro}
 \input{programmazione_funzionale/lambda_expression/intro/intro}
 
 \section{Lambda expression}
-E' una \textit{funzione anonima}, un blocco di codice che può essere passato, assegnato, restituito in modo da essere eseguito in un secondo momento, una o più volte.
+E' una \underline{funzione anonima}, un blocco di codice che può essere passato, assegnato, restituito in modo da essere eseguito in un secondo momento, una o più volte.
 
-I valori gestiti sono \textit{funzioni} e non oggetti, in java una funzione è un'istanza di un oggetto che implementa una certa interfaccia.
+I valori gestiti sono \underline{funzioni} e non oggetti, in java una funzione è un'istanza di un oggetto che implementa una certa interfaccia.
+\smallskip
 
-Nell'esempio di LengthComparator, a noi basterebbe dire che, per confrontare due stringhe, bisogna usare il blocco di codice di compare, specificando che first e 
-second sono oggetti di tipo String.
-
-Quindi dovremmo passare ad Arrays.sort una funzione che, dati due oggetti String, restituisce \newline first.length() $-$ second.length().
+Nell'esempio di LengthComparator, a noi basterebbe dire che, per confrontare due stringhe, bisognerebbe usare il blocco di codice di compare, specificando che first e 
+second sono oggetti di tipo String, per poi passare ad Arrays.sort una funzione che, dati due oggetti String, restituisce first.length() $-$ second.length().
 
 In java, la sintassi per definire questa funzione è
 
@@ -46,8 +45,9 @@ public class SortDemo {
 } 
 \end{lstlisting}
 
-Il body di una lambda viene eseguito non quando viene passata al metodo sort ma quando bisogna effetivamente confrontare gli oggetto (\textit{esecuzione differita}) e 
-se il body dovesse aver bisogno di più righe, allora si userebbero le parentesi graffe e il return.
+Il body di una lambda viene eseguito non quando viene passata al metodo sort ma quando bisogna effetivamente confrontare gli oggetto 
+(si dice \underline{esecuzione differita}) e se il body dovesse aver bisogno di più righe, allora si userebbero le parentesi graffe e il return.
+\smallskip
 
 Java può inferire il tipo dei parametri della lambda dal contesto, in tal caso si possono omettere i tipi, stessa cosa per il tipo di ritorno anche se qui java fa un 
 controllo che sia utilizzabile nel contesto in cui viene usata la lambda.
@@ -59,21 +59,19 @@ Si può assegnare/passare una lambda quando ci si aspetta un oggetto dichiarato 
     e del tipo inferito del body della lambda che deve essere compatibile col tipo di ritorno del metodo.
 \end{itemize}
 
-Una tale interfaccia è detta \textit{interfaccia funzionale} o \textit{SAM} (Single Abstract Method).
+Una tale interfaccia è detta \underline{interfaccia funzionale} o \underline{SAM} (Single Abstract Method).
 
-\section{Method references}
-\input{programmazione_funzionale/lambda_expression/intro/method_references.tex}
+\subsection{Method references}
+\input{programmazione_funzionale/lambda_expression/intro/method_references}
 
 \section{Scope di una lambda}
-Un'interfaccia funzionale può avere tanti metodi statici e di default ma basta che abbiamo un singolo metodo astratto. 
+Un'interfaccia funzionale può avere tanti metodi statici e di default ma basta che abbiamo \underline{un} singolo metodo astratto e deve essere annotatata con il tag 
+@FunctionalInterface, così facendo il compilatore controllerà che il vincolo sia rispettato e gli altri utenti sapranno che quell'interfaccia è pensata come funzionale.
+\smallskip
 
-Un'interfaccia conviene annotarla con il tag @FunctionalInterface, così facendo il compilatore controllerà che il vincolo sia rispettato e gli altri utenti sapranno 
-che quell'interfaccia è pensata come funzionale.
-
-Non possiamo dichiarare variabili locali in una lambda o parametri di una lambda con lo stesso nome di variabili già definite nei blocchi esterni. 
-
-Una lambda può riferirsi a variabili definite NON dentro la lambda purchè dichiarate final o effectively final, si dice che ha un \textit{ambito di visibilità circostante} 
-(enclosing scope), per esempio
+Non possiamo dichiarare variabili locali in una lambda o parametri di una lambda con lo stesso nome di variabili già definite nei blocchi esterni però è posibile
+fargli riferimento purchè dichiarate final o effectively final (si dice che ha un \underline{ambito di visibilità circostante} o enclosing scope). 
+Per esempio
 \begin{lstlisting}
 String message = "Hello ";
 repeat(10, (x) -> System.out.println(message + x));
@@ -82,15 +80,13 @@ repeat(10, (x) -> System.out.println(message + x));
 La lambda si riferisce alla variabile 'message' ma il body della lambda sarà effettivamente eseguito da dentro il metodo repeat e, da dentro il metodo repeat, la 
 variabile 'message' non è visibile, eppure il codice è lecito e tutto funziona.
 
-Una lambda ha tre ingredienti, parametri, body e i valori delle \textit{variabili libere}, ovvero parametri che non fanno parte dei parametri della lambda e che non fanno parte
-delle variabili dichiarate nel blocco di codice della lambda.
+Una lambda ha tre ingredienti, parametri, body e i valori delle \underline{variabili libere}, ovvero parametri che non fanno parte dei parametri della lambda e che non
+fanno parte delle variabili dichiarate nel blocco di codice della lambda.
 
-Nell'esempio di prima, 'x' non è una variabile libera, è legata al parametro della lambda, mentre 'message' si.
+Nell'esempio, 'x' non è una variabile libera, è legata al parametro della lambda, mentre 'message' si, lo è.
 
-Una lambda expression cattura il valore di queste variabili libere e, quando viene eseguita, il body è chiuso rispetto ad esse ed è per questo motivo che a runtime una
-lambda è detta \textit{chiusura} (closure).
-
-Ovvero prima di passare la lambda a repeat, è come se java sostituisse message direttamente con "Hello ".
+Una lambda expression cattura il valore delle variabili libere e, quando viene eseguita, il body è chiuso rispetto ad esse ed è per questo motivo che a runtime una
+lambda è detta \underline{chiusura} (closure), ovvero prima di passare la lambda a repeat, è come se java sostituisse message direttamente con "Hello ".
 
 
 
