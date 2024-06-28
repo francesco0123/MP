@@ -372,68 +372,31 @@ modifica all’interfaccia, anche gli altri client ne sarebbero influenzati, anc
 
 Quindi sarebbe conveniente dividere l'interfaccia originale in interfacce più piccole, così facendo l'interfaccia originale conterrà solo i metodi comuni ai client 
 mentre le interfacce più piccole si occuperanno dei metodi specifici.
-\smallskip
-
-Prendiamo ad esempio il sistema di pagamento di un parcheggio
-
-\begin{lstlisting}[linewidth=15cm]
-  public interface Parcheggio {
-
-    void parcheggiaAuto();	// Diminuisce parcheggi vuoti di 1
-    void esceAuto(); // Aumenta parcheggi vuoti di 1
-    void getCapienza();	// Restituisce capienza auto
-    double calcolaQuota(Auto auto); // Restituisce il prezzo in base al numero di ore
-    void faiPagamento(Auto auto);
-  }
-
-  class Auto {
-    ...
-  }
-\end{lstlisting}
-
-Immaginiamo di voler implementare un parcheggio gratuito (che estenderà Parcheggio) e notiamo che abbiamo obbligato questa classe ad implementare i metodi di pagamento
-del parcheggio anche se non ne avrebbe bisogno (è gratis) e magari, nel metodo pagamento, lanciamo un'eccezione gestita con un semplice "il parchegio è gratis".
-
-Quindi si nota che l'interfaccia Parcheggio si occupa di due logiche distinte, quella del parcheggio e quella del pagamento del parcheggio stesso.
-
-Una possibile soluzione, quindi, sarebbe quella di scindere l'interfaccia parcheggio in altre due interfacce, quella a pagamento e quella gratis, la prima oltre 
-ad ereditare i metodi riferiti al parcheggio, aggiungerà i metodi riguardanti i pagamenti, mentre la seconda, implementrà l'interfaccia padre.
-
-Con questo nuovo modello, possiamo anche andare oltre e dividere l'interfaccia pagamento per supportare diverse modalità di pagamento.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.5\linewidth]{../../immagini/principio_SOLID/refactoring_interfaccia.png}
-\end{figure}
 
 \section{Dependency Inversion Principle (DIP)}
 
-Questo principio ci dice che i sistemi più flessibili sono quelli dove le dipendenze del codice sorgente si riferiscono solo alle astrazioni.
+Questo principio ci dice che i sistemi più flessibili sono quelli dove le "dipendenze" del codice sorgente si riferiscono solo alle astrazioni.
 
-Per dipendenza nel codice sorgente si intende che, dato un file Client.java, se in dato file nomino un tipo A, allora diremo che il codice sorgente di Client dipende 
-da A, anche se dovessimo usare un sottotipo di A, B, diremo che Client dipende, staticamente, da A.
+Per "dipendenza" si intende che, dato un file Client.java, se in dato file nomino un tipo A, allora diremo che il codice sorgente di Client dipende da A, anche se 
+dovessimo usare un sottotipo di A, B, diremo che Client dipende, staticamente, da A.
 
 Da qui utilizzeremo il concetto di modulo/componente inteso come raggruppamento di classi.
+\smallskip
 
 Tradizionalemente, i moduli di alto livello dipendono dai moduli di basso livello, per dipendere si intende chiamare direttamente codice di basso livello o istanziare
 direttamente classi concrete.
 
-Per codice di alto livello, detto anche core, intendiamo la parte di un'applicazione computazionale, algoritmica o che elabora, ovvero è la parte che contraddistingue 
-un'applicazione.
+Per codice di alto livello, detto anche "core", intendiamo la parte di un'applicazione computazionale, algoritmica o che elabora, ovvero è la parte che contraddistingue 
+un'applicazione, mentre per codice di basso livello intendiamo interfaccia utente o database e quindi se il codice di alto livello dipende dal codice di basso livello, 
+significa che modifiche a quest'ulitmo, avranno un impatto sul codice di alto livello.
+\smallskip
 
-Mentre per codice di basso livello intendiamo interfaccia utente o database.
-
-Quindi se il codice di alto livello dipende dal codice di basso livello, significa che modifiche a quest'ulitmo, avranno un impatto sul codice di alto livello.
-
-\newpage
-Si prende come esempio un'architettura OO dove la parte più alta indica codice di alto livello.
 \begin{wrapfigure}{r}{8cm}
-  \includegraphics[width=0.5\linewidth]{../../immagini/principio_SOLID/architetturaOOnoDIP}  
+  \includegraphics[width=5cm]{../../immagini/principio_SOLID/architetturaOOnoDIP}  
 \end{wrapfigure}
-
-Il layer di alto livello usa solo il layer sottostante ma usare significa che dipende dal layer sottostante.
-
-Inolte se il layer sottostante dipende dal layer di basso livello, allora il layer di alto livello, transitivamente, dipende dal layer di basso livello.
+Supponiamo di avere tre layer, Policy, Mechanism e Utility dove layer di alto livello (Policy) usa solo il layer sottostante
+(usare = significa che dipende dal layer sottostante), inoltre se il layer sottostante (Mechanism) dipende dal layer di basso livello (Utility), allora il layer di alto 
+livello, transitivamente, dipende dal layer di basso livello.
 
 Per risolvere questo problema
 \begin{itemize}
@@ -448,7 +411,7 @@ Così facendo, le dipendenze vengono invertite, ovvero sono i layer di basso liv
 \end{figure}
 
 staticamente Policy chiama un metodo dell'interfaccia, a runtime verrà invocato l'implementazione di tale metodo dal layer inferiore, così facendo, posso cambiare un
-layer sottostante senza modificare un layer soprastante e posso testare un layer soprastante senza avere un layer sottostante ed inoltre è buona cosa non menzionare 
-mai il nome di qualcosa che è concreto (non astratto) e volatile (che cambia spesso) e non avervi riferimento.
+layer sottostante senza modificare un layer soprastante e posso testare un layer soprastante senza avere un layer sottostante. 
+\medskip
 
-Quindi, i design pattern guidano lo sviluppo del codice e il refactoring aiutando a sviluppare software pulito e facile da estendere, riusare, mantenere e testare.
+\textbf{N.B.} E' buona norma non menzionare mai il nome di qualcosa che è concreto (non astratto) e volatile (che cambia spesso) e non avervi riferimento.
