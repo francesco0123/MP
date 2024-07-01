@@ -3,11 +3,11 @@
 Questa tipologia di pattern \textit{astrae} il processo di creazione degli oggetti, fornendo diversi modi per associare un’interfaccia (o classe astratta) con 
 un’implementazione e assicura che il programma sia scritto in termini di interfacce e non di implementazione.
 
-\section{PERCHE'?}
+\section{Perchè?}
 
 Dal DIP sappiamo che è fondamentale non riferirsi a classi concrete (ma a classi astratte) e questo implica che ogni istruzione new mette a rischio questo principio.
 
-Però, prima o poi, lo statement new deve essere usato ed è fondamentale che questo avvenga in poche e limitate parti del programma su cui abbiamo il controllo di 
+Però, prima o poi, lo statement "new" deve essere usato ed è fondamentale che questo avvenga in poche e limitate parti del programma su cui abbiamo il controllo di 
 flessibilità.
 
 Se volessimo cambiare il tipo degli oggetti creati, saremmo in grado di farlo in un solo punto e senza troppe conseguenze al resto del programma.
