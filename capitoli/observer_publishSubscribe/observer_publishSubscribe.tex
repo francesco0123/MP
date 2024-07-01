@@ -1,28 +1,29 @@
 
 \chapter{OBSERVER}
 
-E' un design pattern \underline{comportamentale} utilizzato per gestire le relazioni uno a molti quando lo stato di uno degli oggetti cambia e si richiede 
-l'aggiornamento automatico di altri oggetti dipendenti.
-\medskip
+E' un design pattern \underline{comportamentale}, descrive come classi e oggetti interagiscono e si distribuiscono le responsabilità. 
+
+Utilizzato per gestire le relazioni uno a molti quando lo stato di uno degli oggetti cambia e si richiede l'aggiornamento automatico di altri oggetti dipendenti.
+\smallskip
 
 Classico esempio è quello di excel dove abbiamo una cella caratterizzata da una formula che fa riferimento a più celle "satellite" ed ogni volta che modifichiamo il
 valore di questi satelliti, la cella caratterizzata dalla formula cambia di conseguenza.
-\medskip
+\smallskip
 
-Questo pattern è basato sul concetto di un oggetto (\textbf{subject}) che tiene traccia dei suoi osservatori (\textbf{observers}).
-
-Tutti gli observer vengono notificati ogni volta che il subject cambia il suo stato (è il subject che notifica e non sono gli osservatori che controllano ogni 
-tot tempo).
-
-A quel punto ogni observer può ispezionare lo stato del subject e aggiornare il proprio stato.
+Questo pattern è basato sul concetto di un oggetto (\underline{subject}) che tiene traccia dei suoi osservatori (\underline{observers}) dove tutti gli observer vengono 
+\textit{notificati ogni volta che il subject cambia il suo stato} e a quel punto ogni observer può ispezionare lo stato del subject e aggiornare il proprio stato.
 
 \medskip
-\textbf{N.B.} Il subject non conosce quali observer lo osservano, lui si mantiene una lista di observer ma non conosce la loro implementazione concreta 
-(\textbf{accoppiamento astratto} o abstract coupling).
+\textbf{N.B.} Il subject non conosce quali observer lo osservano, lui si mantiene una lista di observer ma non conosce la loro implementazione concreta, si parla di
+\underline{accoppiamento astratto} (abstract coupling).
 
-Quando notifca, lui non sa a chi sta veramente notificando.
-\medskip
+\section{Accoppiamento astratto}
+Observer non si riferisce a Subject ma è Subject che si riferisce agli Observer notificandoli mentre ConcreteObserver ha un riferimento diretto a ConcreteSubject, 
+che invece ConcreteSubject non lo ha ma lo fa, indirettamente, chiamando il metodo di notifica ereditato da Subject.
 
+Il Subject invia una notifica, in modalità broadcast a tutti i suoi Observer e spetterà all'Observer capire se la notifica è di suo interesse oppure no.
+
+\section{Conseguenze}
 Questo pattern favorisce la riduzione della dipendenza tra il soggetto e gli osservatori, permettendo di aggiungere o rimuovere osservatori senza modificare il 
 soggetto stesso. 
 
@@ -30,17 +31,17 @@ Inoltre, favorisce un design flessibile e scalabile, permettendo di gestire in m
 
 \section{Struttura}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{../../immagini/observer_publishSubscribe/struttura_observer}
 \end{figure}
 
 \textbf{Subject} fornisce un'interfaccia per aggiungere, rimuovere e notificare gli Observer, ne conosce solamente l'interfaccia e può essere osservato da qualsiasi 
-Observer.
+Observer;
 
-\textbf{Observer} definisce l'interfaccia per gli oggetti che devono essere notificati riguardo il cambiamento del Subject.
+\textbf{Observer} definisce l'interfaccia per gli oggetti che devono essere notificati riguardo il cambiamento del Subject;
 
-\textbf{ConcreteSubject} mantiene uno stato da fornire ai ConcreteObserver.
+\textbf{ConcreteSubject} mantiene uno stato da fornire ai ConcreteObserver;
 
 \textbf{ConcreteObserver} ha un riferimento a ConcreteSubject ed un proprio stato che deve essere consistente al ConcreteSubject. 
 
@@ -50,15 +51,6 @@ ConcreteSubject notifica i suoi osservatori quando avviene un cambiamento che po
 
 Durante la notifica il ConcreteObserver può ispezionare il Subject per ottenere le informazioni per aggiornare il proprio stato, in modo da renderlo consistente con
 quello del Subject.
-
-\section{Conseguenze}
-
-Observer non si riferisce a Subject ma è Subject che si riferisce agli Observer notificandoli.
-
-ConcreteObserver ha un riferimento diretto a ConcreteSubject, mentre ConcreteSubject non lo ha, lo fa indirettamente chiamando il metodo di notifica ereditato da 
-Subject.
-
-Il Subject invia una notifica, in modalità broadcast a tutti i suoi Observer e spetterà all'Observer capire se la notifica è di suo interesse oppure no.
 
 \section{Notifica}
 
