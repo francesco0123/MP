@@ -1,11 +1,12 @@
 \chapter{ITERATOR}
 
-Pattern \underline{comportamentale} (descrive come classi e oggetti interagiscono e si distribuiscono le responsabilità) usato per accedere ai contenuti di un oggetto 
-aggregato senza esporne la rappresentazione interna e ne fornisce un modo uniforme per attraversarla.
+Pattern \underline{comportamentale}, descrivono come classi e oggetti interagiscono e si distribuiscono le responsabilità.
 
-Supponiamo di avere una classe scuola, avente una collezione privata di studenti permettendo ai client di poter aggiungere alla collezione col metodo add().
+Usato per accedere ai contenuti di un oggetto aggregato senza esporne la rappresentazione interna e fornisce un modo uniforme per attraversarla.
+\smallskip
 
-Supponiamo inoltre di volerne dare un accesso in sola lettura, attraverso un getter pubblico
+Supponiamo di avere una classe scuola, avente una collezione privata di studenti permettendo ai client di poter aggiungere alla collezione col metodo add() e di 
+volerne dare un accesso in sola lettura, attraverso un getter pubblico
 \begin{lstlisting}
 public class School {
     private ArrayList<Student> students = new ArrayList<>();
@@ -24,15 +25,17 @@ Così facendo si espone ai client un dettaglio implementativo, ArrayList e, se u
 problemi di compilazione.
 
 Un getter protected non migliorerebbe la situazione in quanto ai client esterni basterebbe estendere la nostra classe per usare quel getter e quindi stesso problema.
+\smallskip
 
 Utilizzando un iteratore
 \begin{itemize}
     \item accediamo ai contenuti di oggetto aggregato senza esporne la rappresentazione interna;
-    \item possiamo supportare diverse strategie di attraversamento degli oggetti aggregati;
+    \item possiamo supportare diverse strategie di attraversamento;
     \item fornire un’interfaccia uniforme per attraversare strutture aggregate diverse.
 \end{itemize}
 
 \textbf{N.B.} Un iteratore non conosce il numero di elementi di un aggregato, può solamente attraversarli.
+\medskip
 
 Quindi con l'iteratore avremo
 \begin{lstlisting}
@@ -65,11 +68,11 @@ struttura che li contiene senza poter fare assunzioni sull’ordine durante l’
 \textbf{Iterator} definisce l'interfaccia per attraversare gli elementi e offre metodi come hasNext() per verificare se ci sono altri elementi da attraversare e next()
 per ottenere l'elemento successivo;
 
-\textbf{Aggregate} è l'interfaccia o la classe astratta che rappresenta la collezione di oggetti che fornisce un metodo per ottenere un iteratore che può essere 
-utilizzato per attraversare gli elementi.
+\textbf{Aggregate} è l'interfaccia, o la classe astratta, che rappresenta la collezione di oggetti che fornisce un metodo per ottenere un iteratore che può essere 
+utilizzato per attraversare gli elementi;
 
-\textbf{ConcreteIterator} implementa Iterator e tiene traccia, durante l’attraversamento, dell’oggetto corrente e deve essere in grado di calcolare l’elemento 
-successivo e ha un riferimento all’aggregato concreto.
+\textbf{ConcreteIterator} implementa Iterator, tiene traccia, durante l’attraversamento, dell’oggetto corrente, deve essere in grado di calcolare l’elemento 
+successivo e ha un riferimento all’aggregato concreto;
 
 \textbf{ConcreteAggregate} implementa Aggregate e crea un opportuno ConcreteIterator.
 
@@ -109,10 +112,12 @@ public class School {
 
 \section{Iterator vs Stream}
 
-Possono sembrare simili.
-
-Gli stream sono più astratti e possono essere parallelizzati, si basano su un approccio dichiarativo, permettono facilmente di filtrare, raggruppare, partizionare e 
-gestiscono completamente in automatico l’attraversamento dell’aggregato.
-
-Gli iteratori sono molto più semplici, permettono di attraversare un aggregato un elemento alla volta, sono per loro stessa natura sequenziali ma richiedono che hasNext() 
-e next() siano usati correttamente insieme.
+Possono sembrare simili ma
+\begin{itemize}
+    \item gli stream sono più astratti e possono essere parallelizzati, si basano su un approccio dichiarativo, permettono facilmente di filtrare, raggruppare, 
+    partizionare e \underline{gestiscono, in automatico, l’attraversamento dell’aggregato};
+    \item gli iteratori sono molto più semplici, permettono di attraversare un aggregato un elemento alla volta, sono per loro stessa natura sequenziali ma 
+    richiedono \underline{che hasNext() e next() siano usati correttamente insieme};
+    \item creare un’implementazione di Iterator è piuttosto semplici, i metodi da implementare sono pochi;
+    \item creare un’implementazione di Stream non è banale.
+\end{itemize}
