@@ -3,9 +3,9 @@ Sono due pattern \underline{comportamentali}, descrivono come classi e oggetti i
 
 \section{Template Method}
 Definisce, in unico punto, lo scheletro di un algoritmo e delega alcuni passi, quelli che possono variare, alle sottoclassi che avranno il compito di ridefinirli senza
-modificare la struttura dell'algoritmo.
+modificare la struttura dell'algoritmo stesso.
 
-Prendiamo come esempio un framework che fornisce la classe Application e Document responsabili, rspettivamente, di aprire un documento e salvarlo e di rappresentare 
+Prendiamo come esempio un framework che fornisce le classi Application e Document responsabili, rspettivamente, di aprire un documento e salvarlo e di rappresentare 
 le informazioni una volta che il documento è in memoria.
 
 Application, intesa come classe astratta, definirà l’algoritmo per aprire e leggere un documento in un metodo openDocument() che chiamerà al suo interno altri metodi 
@@ -59,11 +59,11 @@ Il templateMethod porta all'\textit{hollywood principle}, ovvero sono le classi 
 
 \section{Strategy}
 
-Definisce una famiglia di algoritmi, li incapsula, e li rende intercambiabili.
+Definisce una famiglia di algoritmi, li incapsula, li rende intercambiabili e ne nasconde le informazioni interne cosicchè una classe può avere diversi comportamenti 
+a seconda di qualche condizione.
+\smallskip
 
-Lo Strategy nasconde le informazioni interne dell’implementazione di un algoritmo, una classe può avere diversi comportamenti a seconda di qualche condizione.
-
-Prendiamo ad esempio uno Shop che può applicare più sconti, ad esempio percentuale, assoluto o nessuno sconto.
+Prendiamo ad esempio una classe Shop che può applicare più tipologie di sconti ad esempio percentuale, assoluto o nessuno sconto.
 
 Prima di applicare lo Strategy saremo in una condizione di questo tipo
 \begin{lstlisting}
@@ -96,7 +96,7 @@ public class Shop {
 \end{lstlisting}
 
 dove il tipo di sconto può essere modificato a runtime (good) ma i dettagli interni di ogni tipo di sconto devono essere specificati nello Shop (no good) e, se 
-in futuro dovessi aggiungere un nuovo tipo di sconto, dovrei mettere alla classe Shop aggiungengo un nuovo ramo all'if-else, anche se non dovrebbe essere di sua 
+in futuro dovessi aggiungere un nuovo tipo di sconto, dovrei mettere mano alla classe Shop aggiungengo un nuovo ramo all'if-else, anche se non dovrebbe essere di sua 
 compentenza.
 
 Con lo Strategy avremo 
@@ -120,7 +120,7 @@ private DiscountStrategy discountStrategy;
 
 dove il tipo di sconto può essere modificato a runtime (good) e dettagli interni di ogni tipo di sconto non riguardano Shop (good).
 
-DiscountStrategy è la nostra interfaccia che mette a disposizione il metodo, astratto, applyDiscount(int) che sarà gestito in maniera differente in base alla tipologia
+DiscountStrategy è la nostra interfaccia che mette a disposizione il metodo astratto, applyDiscount(int) che sarà gestito in maniera differente in base alla tipologia
 di sconto che vogliamo applicare, ad esempio
 \newpage
 \begin{multicols}{2}
@@ -174,7 +174,7 @@ di sconto che vogliamo applicare, ad esempio
 
 \subsection{Conseguenza}
 
-I Client devono essere consapevoli che esistono diverse strategie (cioè diverse implementazioni di una strategia).
+I Client devono essere consapevoli che esistono diverse strategie (cioè diverse implementazioni di una strategia), infatti hanno un riferimento allo Strategy.
 
 \subsection{Struttura e partecipanti}
 
@@ -197,6 +197,7 @@ volta un’interfaccia per permettere a uno Strategy di accedere al suo stato.
 Sembra simile al templateMethod, invece è completamente l'opposto, col templateMethod l'\textit{implementazione dell'algoritmo è fissa}, cambia solamente 
 l'implementazione di alcuni suoi passi, mentre nello strategy è \textit{fisso il problema che intende risovere} l'algoritmo ma il come deve essere risolto viene 
 implementato dalle sottoclassi. 
+\smallskip
 
 Prendiamo come esempio l'ordinamento
 
