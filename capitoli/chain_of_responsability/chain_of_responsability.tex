@@ -1,9 +1,12 @@
 \chapter{CHAIN OF RESPONSABILITY}
 
-Pattern \underline{comportamentale} avente lo scopo di evitare di associare il mittente di una richiesta al suo destinatario, dando a più di un oggetto la 
-possibilità di gestire la richiesta.
+Pattern \underline{comportamentale}, descrive come classi e oggetti interagiscono e si distribuiscono le responsabilità. 
+\smallskip
+
+Ha lo scopo di evitare di associare il mittente di una richiesta al suo destinatario, dando a più di un oggetto la possibilità di gestire la richiesta.
 
 Il primo oggetto della catena che riceve la richiesta, la gestisce oppure la inoltra al prossimo candidato che si comporterà nello stesso modo. 
+\smallskip
 
 Il client che effettuerà la richiesta, non dovrà preoccuparsi di chi dovrà gestirla, anche perchè non sa chi la gestirà, quindi è fondamentale che gli oggetti 
 della catena abbiamo la stessa interfaccia.
@@ -26,6 +29,7 @@ essere specificati dinamicamente.
 successore;
 
 \textbf{Client} invia la richiesta chiamando un metodo sul primo elemento della catena, ignorandone il tipo effettivo.
+\medskip
 
 Il successore di un Handler può essere passato direttamente al costruttore oppure tramite un setter.
 
@@ -53,7 +57,7 @@ Entrambi i pattern sembrano simili ma
 
 \begin{multicols}{2}
     \begin{itemize}
-        \item [] ha due classi principali astratta;
+        \item [] ha due classi principali astratte;
         \item [] \textit{tutte} le classi gestiscono la richiesta;
         \item [] il componente da decorare non deve essere null;
         \item [] pattern strutturale
