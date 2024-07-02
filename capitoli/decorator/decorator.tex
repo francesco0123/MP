@@ -1,17 +1,15 @@
 \chapter{DECORATOR}
 
-Pattern \underline{strutturale}, ovvero descrive come classi e oggetti vengono composti per formare strutture più ampie, è basato su object composition e delegation e 
-il suo intento è quello di aggiungere, dinamicamente, responsabilità ad un oggetto senza influenzare altri oggetti.
+Pattern \underline{strutturale}, ovvero descrive come classi e oggetti vengono composti per formare strutture più ampie. 
 
-Fornisce una soluzione più flessibile riguardo l'utilizzo dell'ereditarietà con la quale si avrebbe un'esplosione di sottoclassi perchè, per cambiare una decorazione, 
-dovremmo creare una nuova instanza di un'altra classe.
+E' basato su object composition e delegation e il suo intento è quello di aggiungere, dinamicamente, responsabilità ad un oggetto senza influenzare altri oggetti.
+\smallskip
 
 L'idea di base è quella di racchiudere l'oggetto (\textbf{decorato}) in un altro oggetto (\textbf{decoratore}) che delega i metodi all'oggetto decorato aggiungendo del 
 comportamento prima o dopo la inoltro.
 
 Il decoratore ha la stessa interfaccia dell’oggetto decorato, quindi la sua presenza è trasparente per i client e ciò permette di avere tanti decoratori annidati
 ricorsivamente.
-
 \section{Struttura}
 
 \begin{figure}[H]
@@ -40,25 +38,30 @@ che non gli competono.
 
 \section{Conseguenza}
 
+Il pattern Decorator fornisce un modo più flessibile per aggiungere responsabilità rispetto all’inheritance
+\begin{itemize}
+    \item coi decorator si aggiungono responsabilità a runtime aggiungendo decorator;
+    \item con l’inheritance invece si avrebbe un’esplosione delle classi.
+\end{itemize}
+
 Un sistema basato su questo pattern avrà a che fare con tanti piccoli oggetti che differiscono per il modo in cui sono iterconnessi e composti.
 
 Questi sistemi sono flessibili e facili da customizzare ma sono difficli da comprendere e debuggare.
 
-Se esiste un solo tipo di decorazione, la classe astratta Decorator non serve.
-
-Uno stesso oggetto Decorator non può essere usato per decorare due componenti.
-
-Potremmo cambiare il componente da decorare se aggiungiamo un setter nel decorator ma lo stesso oggetto decoratore può decorare un solo componente alla volta.
+Uno stesso oggetto Decorator non può essere usato per decorare due componenti, potremmo cambiare il componente da decorare se aggiungiamo un setter nel decorator ma 
+lo stesso oggetto decoratore può decorare sempre un solo componente alla volta.
 
 \section{Decorator vs Strategy}
 
 Il Decorator rispetta il principio \textit{"Changing the skin of an object versus changing its guts"} (cambiare la pelle invece delle viscere), cambia la pelle di un 
 oggetto avvolgendolo in un decoratore, invece lo Strategy cambia le viscere, ovvero l'oggetto delega allo Strategy il comportamento da seguire.
+\smallskip
 
 Component non è a conoscenza dei suoi decoratori, il client utilizza, \textit{senza saperlo}, il Decorator più esterno che farà qualcosa prima o dopo l'inoltro al 
 Component che, a sua volta, se sarà un altro decoratore farà la stessa cosa, altrimenti applicherà il comportamento di default.
 
 Nello Strategy, il client \textit{è consapevole} delle diverse implementazioni (ha un riferimento allo Strategy).
+\smallskip
 
 Il Decorator ha la stessa interfaccia del suo Component mentre lo Strategy ha la sua interfaccia con diverse implementazioni concrete.
 
@@ -88,8 +91,8 @@ Aggiungere nuovi tipi di decorator è facile, basta implementare/estendere e poi
 
 Il difficile è rimuovere un decorator in quanto la catena delle decorazioni deve essere ricreta, dove l'oggetto SaySomething finale non deve essere re-istanziato, 
 mentre i decoratori intermedi si.
-
 \medskip
+
 \textbf{N.B.} Quando passiamo il componente da decorare in un decorator, il componente non deve essere null (deve essere documentato nel javadoc), infatti occorre 
 fare un controllo la prima volta che ci viene fornito un componente da decorare null (bisognerà anche testare questo scenario).
 
