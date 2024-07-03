@@ -76,7 +76,7 @@ Eseguendo questo codice
 per il binding dinamico, d staticamente è EmployeeDB ma a runtime è ManagerDB, quindi il metodo che sarà chiamato, sarà quello di ManagerDB che 
 però non esiste e quindi lancerà un'eccezione del tipo NoSuchMethodException.
 
-A livello di compilazione, tutto è ok perchè il metodo updateEmployee(Employee), staticamente è di tipo EmployeeDB ma a runtime chiamerà il metodo di ManagerDB 
+A livello di compilazione, tutto è ok perchè il metodo updateEmployee(Employee), staticamente è di tipo \newline EmployeeDB ma a runtime chiamerà il metodo di ManagerDB 
 dove abbiamo deciso di mettere in posizione covariante anche i parametri e questo non va bene perchè, per il binding dinamico, verrebbe chiamato updateEmployee
 di ManagerDatabase che peraltro si aspettava un Manager ed invece si ritrova un Employee e boom, eccezione del tipo NoSuchMethodException.
 

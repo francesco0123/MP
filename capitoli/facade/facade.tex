@@ -28,7 +28,7 @@ Con il facade basta aggiungere un intermediario, ExpressioneTypeSystem ed Expres
     public class ExpressionTypeSystem {
         public Class<?> computeType(Expression e) {
             return e.accept
-                    (new ExpressionTypeSystemVisitor());
+                (new ExpressionTypeSystemVisitor());
         }
     }
 \end{lstlisting}

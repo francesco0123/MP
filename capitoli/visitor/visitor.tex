@@ -116,13 +116,15 @@ public class ParenthesisRepresentation {
 }
 \end{lstlisting}
 
-tutto ok ma il tutto è macchinoso e poco leggibile, usiamo instanceof e cast (che è “error prone”), è inefficiente e c'è lo spauracchio dell'eccezione dietro l'angolo.
+tutto ok ma il tutto è macchinoso e poco leggibile, usiamo instanceof e cast (che è “error prone”), è inefficiente e c'è lo spauracchio dell'eccezione dietro 
+l'angolo.
 
 Infatti se passiamo Multipliction, avremo eccezione.
 
 \subsection{dispatch map}
 
-Quindi usiamo una Map per selezionare il metodo in base al tipo effettivo dell’oggetto dove Key: Class, Value: lambda che chiama il metodo
+Quindi usiamo una Map per selezionare il metodo in base al tipo effettivo dell’oggetto dove la chiave è la classe mentre il valore valore è dato dalla lambda 
+che chiama il metodo
 \begin{lstlisting}
 public class ParenthesisRepresentation {
   private Map<Class<? extends Expression>,Function<Expression, String>> dispatchMap = new HashMap<>();
@@ -150,7 +152,7 @@ imprecisazioni o sviste di codice però è più efficiente del dispatch manuale.
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=8cm]{../../immagini/visitor/struttura_visitor}
+  \includegraphics[width=8cm]{visitor/struttura_visitor.png}
 \end{figure}
 
 Un client crea un ConcreteVisitor e visita la struttura a oggetti.
