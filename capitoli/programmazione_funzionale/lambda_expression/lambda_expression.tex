@@ -69,8 +69,9 @@ Un'interfaccia funzionale può avere tanti metodi statici e di default ma basta 
 @FunctionalInterface, così facendo il compilatore controllerà che il vincolo sia rispettato e gli altri utenti sapranno che quell'interfaccia è pensata come funzionale.
 \smallskip
 
-Non possiamo dichiarare variabili locali in una lambda o parametri di una lambda con lo stesso nome di variabili già definite nei blocchi esterni però è posibile
+Non possiamo dichiarare variabili locali in una lambda o parametri di una lambda con lo stesso nome di variabili già definite nei blocchi esterni però è possibile
 fargli riferimento purchè dichiarate final o effectively final (si dice che ha un \underline{ambito di visibilità circostante} o enclosing scope). 
+
 Per esempio
 \begin{lstlisting}
 String message = "Hello ";
