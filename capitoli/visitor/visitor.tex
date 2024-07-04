@@ -169,40 +169,157 @@ implementarlo.
 
 \section{Varianti Visitor}
 
-Supponiamo di voler rimuovere il metodo eval() da Expression e di implementare la valutazione di un espressione tramite il EvalVisitor, tale che 
+Supponiamo di voler rimuovere il metodo eval() da Expression e di implementare la valutazione di un espressione tramite un EvalVisitor, tale che 
 EvalVisitor$<:$ExpressionVisitor.
 
 \subsection{Visitor generico}
 
 Dall'esempio precendete, noi sappiamo che in ExpressionVisitor i metodi visitXXX ritornano una stringa, ma a noi servirebbe che i metodi visitXXX di EvalVisitor 
 ritornino un integer, quindi rendiamo ExpressionVisitor generico e, a sua volta, i metodi visitXXX e accept diventeranno generici.
+\begin{multicols}{2}
+\begin{lstlisting}
+public interface ExpressionVisitor<T> {
+  T visitConstant(Constant c);
+  T visitSum(Sum s);
+}
+\end{lstlisting}
+\columnbreak
+\begin{lstlisting}
+public interface Expression {
+  <T> T accept(ExpressionVisitor<T> visitor);
+}     
+\end{lstlisting}
+\end{multicols}
 
-Andremo a specificare l'argomento di tipo solamente quando andremo ad implementare Expression, con ParenthesisRepresentationVisitor o EvalVisitor, e nei test, in 
-quanto non possiamo instanziare in tipo generico, instanziamo direttamente il visitor concreto.
+\begin{multicols}{2}
+\begin{lstlisting}
+public class Constant implements Expression {
+  ...
+  @Override
+  public <T> T accept(ExpressionVisitor<T> visitor) {
+    return visitor.visitConstant(this);
+  }
+}
+\end{lstlisting}
+\columnbreak
+\begin{lstlisting}
+public class Sum extends BinaryExpression {
+  ...
+  @Override
+  public <T> T accept(ExpressionVisitor<T> visitor) {
+    return visitor.visitSum(this);
+  }
+}
+\end{lstlisting}
+\end{multicols}
+  
+Andremo a specificare l'argomento di tipo solamente quando andremo ad implementare Expression, con ParenthesisRepresentationVisitor o EvalVisitor che saranno,
+rispettivamente, String e Integer.
+\begin{multicols}{2}
+\begin{lstlisting}
+public class ParenthesisRepresentationVisitor
+            implements ExpressionVisitor<String> {
+  public String repr(Constant c) {
+    return "" + c.getValue();
+  }
+
+  public String repr(Sum s) {
+    return "(" +
+            repr(s.getLeft()) +
+            " + " +
+            repr(s.getRight()) +
+            ")";
+  }
+}
+\end{lstlisting}
+\columnbreak
+\begin{lstlisting}
+public class EvalVisitor
+           implements ExpressionVisitor<Integer> {
+  @Override
+  public Integer visitConstant(Constant c) {
+    return c.getValue();
+  }
+  @Override
+  public Integer visitSum(Sum s) {
+    return s.getLeft().accept(this)
+            +
+            s.getRight().accept(this);
+  }
+}
+\end{lstlisting}
+\end{multicols}
 
 \subsection{Visitor void}
 
-I metodi visitXXX e accept sono void e per questo motivo ogni visitor concreto si deve mantere uno stato, che viene usato per accumulare i risultati durante la 
-visita, ed infine fornire un metodo per ottenere il risultato finale di tutta la vista.
+I metodi visitXXX e accept sono void, ogni visitor concreto si mantiene uno stato, che viene usato per accumulare i risultati durante la visita e fornisce
+un metodo per ottenere il risultato finale di tutta la vista.
+\begin{multicols}{2}
+\begin{lstlisting}
+public class ParenthesisRepresentationVisitor 
+                  implements ExpressionVisitor {
+  private String representation = "";
+  
+  public String getRepresentation() {
+    return representation;
+  }
 
+  @Override
+  public void visitConstant(Constant c) {
+    representation += c.getValue();
+  }
+
+  @Override
+  public void visitSum(Sum e) {
+    representation += "(";
+    e.getLeft().accept(this);
+    representation += " + ";
+    e.getRight().accept(this);
+    representation += ")";
+  }
+}
+\end{lstlisting}
+\columnbreak
+\begin{lstlisting}
+public class EvalVisitor 
+          implements ExpressionVisitor {
+  
+  private int result = 0;
+  public int getResult() {
+    return result;
+  }
+
+  @Override
+  public void visitConstant(Constant c) {
+    result = c.getValue();
+  }
+
+  @Override
+  public void visitSum(Sum e) {
+    e.getLeft().accept(this);
+    int temp = result;
+    e.getRight().accept(this);
+    result += temp;
+  }
+} 
+\end{lstlisting}
+\end{multicols}
 \section{Coseguenze}
 
 Dai vari tentativi pre-visitor ne emerge che non c’è modo di avere errori a runtime, se ci dimentichiamo di implementare un visit o un’accept avremo un errore 
 dal compilatore.
+\smallskip
 
 Affinchè i visitor possano agire sugli elementi, l'interfaccia degli elementi deve fornire operazioni pubbliche di accesso e questo compromette l'incapsulamento.
 
-E' facile aggiungere nuove operazioni, basta aggiungere un visitor concreto.
-
-E' difficile aggiungere un nuovo elemento da visitare, bisogna definire un nuovo metodo in visitor che poi dovrà essere implementato dalle classi concrete e il 
-nuovo elemento da visitare deve implementare accept.
+E' facile aggiungere nuove operazioni, basta aggiungere un visitor concreto ma è difficile aggiungere un nuovo elemento da visitare perchè bisogna definire un nuovo 
+metodo in visitor che poi dovrà essere implementato dalle classi concrete del visitor e il nuovo elemento da visitare deve implementare accept.
 
 Per questo motivo, il visitor andrebbe usato quando la gerarchia degli oggetti è \underline{stabile}.
 
 Una soluzione a questo, potrebbe essere quella di fornire un'implementazione dei metodi visitXXX in una classe astratta che implementa Visitor, cosicchè i client 
 che implementeranno Visitor, estenderanno la classe astratta e ridefiniranno i metodi di loro interesse (questo però è un altro pattern).
+\smallskip
 
-Simulando il binding dinamico, facciamo a meno di instanceof e downcast.
-
-Inoltre, se il linguaggio permettesse l'overloading dinamico, allora non ci sarebbe bisogno del metodo accept nelle classi da visitare ma comunque, quest'ultime, 
-dovrebbero sempre fornire punti di accesso alla classe.
+Simulando il binding dinamico, facciamo a meno di instanceof e downcast, inoltre, se il linguaggio permettesse l'overloading dinamico, allora non ci sarebbe bisogno 
+del metodo accept nelle classi da visitare ma comunque, quest'ultime, dovrebbero sempre fornire punti di accesso alla classe.
