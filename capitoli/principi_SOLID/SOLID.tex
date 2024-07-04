@@ -141,7 +141,7 @@ dovute al fatto che PolicyFunction è final.
 Supponiamo di avere una classe Client che si occupa di fare logging e di voler aggiungere un nuovo tipo di log, basterà, quindi, aggiungere un nuovo tipo di logging ad 
 enum ed un nuovo ramo allo if-else.
 
-Come si vede, la classe è si configurabile rispetto al log ma non è aperta ad estensioni del log in quanto la sua gestione dipende da un if-else/switch e quanfo si usa 
+Come si vede, la classe è si configurabile rispetto al log ma non è aperta ad estensioni del log in quanto la sua gestione dipende da un if-else/switch e quando si usa 
 un if-else/switch, si sta violando OCP, inoltre c'è il dubbio su cosa faccia l'ultimo else (in questo caso non fa nulla).
 
 \begin{lstlisting}[linewidth=10cm]
@@ -388,7 +388,8 @@ direttamente classi concrete.
 
 Per codice di alto livello, detto anche "core", intendiamo la parte di un'applicazione computazionale, algoritmica o che elabora, ovvero è la parte che contraddistingue 
 un'applicazione, mentre per codice di basso livello intendiamo interfaccia utente o database e quindi se il codice di alto livello dipende dal codice di basso livello, 
-significa che modifiche a quest'ulitmo, avranno un impatto sul codice di alto livello.
+significa che modifiche a quest'ulitmo, avranno un impatto sul codice di alto livello e questo è sbagliato anche perchè qualcosa che contraddistingue l'applicazione
+non può dipendere da qualcosa che è "perifico".
 \smallskip
 
 \begin{wrapfigure}{r}{8cm}
