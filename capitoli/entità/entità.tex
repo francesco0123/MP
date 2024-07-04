@@ -9,4 +9,9 @@ La logica business, dal DIP, è la parte core di un applicazione, è la parte di
 \medskip
 
 Un’entità è caratterizzata da un’identità che la identifica durante la sua vita da una logica di “uguaglianza” e dal suo stato (il valore dei suoi campi) che 
-tipicamente viene salvato sul database o  mostrato dall’interfaccia utente
+tipicamente viene salvato sul database o mostrato dall’interfaccia utente.
+
+Se cambio le entità, devo probabilmente cambiare anche la logica business e questo porterà a cambiamenti anche nei layer di basso livello.
+
+Non tutti i pattern sono entità ma alcuni possono essere utili per creare entità (creazionali), rappresentare entità (composite).
+
